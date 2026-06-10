@@ -1,6 +1,25 @@
 {
-  "status": "idle",
-  "ideas": null,
+  "status": "awaiting_choice",
+  "ideas": [
+    {
+      "number": 1,
+      "title": "The 3AM Employee",
+      "concept": "A split-screen post showing a business owner sleeping peacefully on one side, while on the other, an N8N workflow dashboard lights up processing leads, sending follow-ups via GoHighLevel, and drafting responses with Claude AI. Caption breaks down exactly what got automated and the hours saved per week.",
+      "hook": "While you were sleeping, your business made 14 sales calls. Here's how."
+    },
+    {
+      "number": 2,
+      "title": "Stop Hiring. Start Automating.",
+      "concept": "A bold text-based carousel post listing 5 roles business owners keep hiring for (admin, lead follow-up, data entry, scheduling, reporting) and the exact automation stack that replaces each one. Visual: red 'X' through job titles with the tool logos stamped over them.",
+      "hook": "That £30k assistant you're about to hire? Claude and N8N will do 80% of the job for £200/month."
+    },
+    {
+      "number": 3,
+      "title": "The Automation Audit",
+      "concept": "A short-form video or graphic where Alfie walks through a real client's chaotic pre-automation workflow (sticky notes, 14 browser tabs, missed follow-ups) versus the streamlined Google Workspace + GoHighLevel + Claude system after. Ends with a CTA to book a free audit.",
+      "hook": "I looked at this business owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days."
+    }
+  ],
   "chosen_idea": null,
   "wants_video": false,
   "version": 0,
@@ -10,5 +29,5 @@
   "fb_url": null,
   "ig_html": null,
   "fb_html": null,
-  "last_updated": null
+  "last_updated": "2026-06-10T22:47:47.281Z"
 }
