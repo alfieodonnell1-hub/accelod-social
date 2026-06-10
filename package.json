@@ -1,0 +1,9 @@
+{
+  "name": "accelod-social",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.0",
+    "puppeteer": "^22.0.0"
+  }
+}

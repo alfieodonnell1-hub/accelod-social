@@ -1,0 +1,47 @@
+name: Accelod Social Post Automation
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # Every Monday 9am UTC
+  repository_dispatch:
+    types: [email-reply]
+  workflow_dispatch:
+
+jobs:
+  automate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run automation
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          N8N_IMAGE_WEBHOOK: ${{ secrets.N8N_IMAGE_WEBHOOK }}
+          N8N_VIDEO_WEBHOOK: ${{ secrets.N8N_VIDEO_WEBHOOK }}
+          N8N_EMAIL_WEBHOOK: ${{ secrets.N8N_EMAIL_WEBHOOK }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          EVENT_TYPE: ${{ github.event_name }}
+          EMAIL_BODY: ${{ toJson(github.event.client_payload.email_body) }}
+        run: node scripts/automate.js
+
+      - name: Commit state
+        run: |
+          git config user.email "bot@accelod.com"
+          git config user.name "Accelod Bot"
+          git add post-state.json
+          git diff --staged --quiet || git commit -m "chore: update post state [skip ci]"
+          git push
