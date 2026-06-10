@@ -103,7 +103,7 @@ async function takeScreenshot(html, outPath) {
 async function sendPreviewEmail(igUrl, fbUrl, version, amendNote) {
   const note = amendNote ? `<p style="color:#666"><em>Changes applied: ${amendNote}</em></p>` : '';
   await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
-    subject: `Re: Accelod Post Options – Preview v${version}`,
+    subject: `Re: Accelod Post Options – ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })} – Preview v${version}`,
     htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
       <h2 style="color:#0B1929">Your post preview — v${version}</h2>
       ${note}
