@@ -2,7 +2,7 @@ name: Accelod Social Post Automation
 
 on:
   schedule:
-    - cron: '0 9 * * 1'   # Every Monday 9am UTC
+    - cron: '0 12 * * *'   # Every day 1pm BST (12pm UTC)
   repository_dispatch:
     types: [email-reply]
   workflow_dispatch:
