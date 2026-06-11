@@ -1,23 +1,23 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "ideas": [
     {
       "number": 1,
-      "title": "The 3AM Employee",
-      "concept": "A split-screen post showing a business owner sleeping peacefully on one side, while on the other, an N8N workflow dashboard lights up processing leads, sending follow-ups via GoHighLevel, and drafting responses with Claude AI. Caption breaks down exactly what got automated and the hours saved per week.",
-      "hook": "While you were sleeping, your business made 14 sales calls. Here's how."
+      "title": "The 3AM Email That Closed a $12K Deal",
+      "concept": "A behind-the-scenes breakdown of an N8N workflow connected to Claude AI and GoHighLevel that qualifies leads, drafts personalised replies, and books calls while the business owner sleeps. Visual would show a split screen: Alfie sleeping on one side, a glowing dashboard with notifications firing on the other.",
+      "hook": "While you were sleeping, this workflow made me $12K. Here's exactly how it's built."
     },
     {
       "number": 2,
       "title": "Stop Hiring. Start Automating.",
-      "concept": "A bold text-based carousel post listing 5 roles business owners keep hiring for (admin, lead follow-up, data entry, scheduling, reporting) and the exact automation stack that replaces each one. Visual: red 'X' through job titles with the tool logos stamped over them.",
-      "hook": "That £30k assistant you're about to hire? Claude and N8N will do 80% of the job for £200/month."
+      "concept": "A direct-to-camera or text-overlay post calling out business owners who keep throwing humans at problems software should solve. Show a side-by-side: a $4K/month VA vs. a Claude + Google Workspace + N8N stack doing the same job for £80/month. Hard numbers, no fluff.",
+      "hook": "Your next hire shouldn't be a person. It should be a workflow."
     },
     {
       "number": 3,
-      "title": "The Automation Audit",
-      "concept": "A short-form video or graphic where Alfie walks through a real client's chaotic pre-automation workflow (sticky notes, 14 browser tabs, missed follow-ups) versus the streamlined Google Workspace + GoHighLevel + Claude system after. Ends with a CTA to book a free audit.",
-      "hook": "I looked at this business owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days."
+      "title": "The 5-Tool Stack Running My Entire Business",
+      "concept": "A carousel or short-form video revealing the exact tools Accelod uses to run client delivery, sales, and ops: Claude AI for thinking, N8N for connecting, GoHighLevel for selling, Google Workspace for everything else. Each slide shows one tool and the specific job it does, ending with a CTA to book a free automation audit.",
+      "hook": "I run a consultancy with 4 tools and zero employees. Here's the stack."
     }
   ],
   "chosen_idea": null,
@@ -29,5 +29,5 @@
   "fb_url": null,
   "ig_html": null,
   "fb_html": null,
-  "last_updated": "2026-06-10T22:58:36.031Z"
+  "last_updated": "2026-06-11T15:25:43.417Z"
 }
