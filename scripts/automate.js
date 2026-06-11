@@ -205,9 +205,10 @@ Style: punchy, direct, soft CTA ("Sound familiar?" etc), 20-25 hashtags (#AIAuto
 
   } else if (state.status === 'awaiting_approval') {
     const intent = JSON.parse(
-      (await claude(`User reviewed their social post preview and replied: "${emailBody}"
-Approval to post or requesting changes?
-Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null" }`))
+      (await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
+Are they approving to post, requesting changes, or approving with a specific schedule time?
+If they mention a schedule (e.g. "post tomorrow at 9am", "schedule for Friday 6pm"), convert it to an exact UTC ISO 8601 datetime string.
+Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null" }`))
       .match(/\{[\s\S]*?\}/)[0]
     );
 
@@ -215,7 +216,8 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       await callN8n(process.env.N8N_IMAGE_WEBHOOK, {
         imageUrl: state.ig_url,
         igCaption: state.ig_caption,
-        fbCaption: state.fb_caption
+        fbCaption: state.fb_caption,
+        scheduledAt: intent.scheduledAt || null
       });
       writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
       console.log('Approved — posted to Buffer via N8N.');
