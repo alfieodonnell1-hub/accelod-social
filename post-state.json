@@ -1,21 +1,26 @@
 {
   "wants_video": false,
-  "status": "idle",
-  "ig_html": null,
-  "fb_caption": "I looked at this owner's daily workflow and nearly threw my laptop.\n\nHere's the BEFORE:\n• 14 browser tabs open at all times\n• Sticky notes everywhere\n• Leads sitting 3+ days with no follow-up\n• Manual invoicing spread across 4 spreadsheets\n• Calendar system = 'I'll remember it'\n\nHere's the AFTER (7 days later):\n✅ Centralised Google Workspace hub\n✅ GoHighLevel pipeline auto-nurturing leads\n✅ Claude AI handling repetitive comms\n✅ 60%+ admin time cut\n\nThis wasn't a marketing problem. It was a workflow problem. And it's the same one I see in nearly every business I audit.\n\nStill selling manually? Drop a 'AUDIT' below and I'll show you where you're leaking time.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #SmallBusinessOwner #WorkflowAutomation #ClaudeAI #GoogleWorkspace #SalesAutomation #LeadGeneration #CRM #DigitalTransformation #ProductivityHacks #BusinessGrowth #Accelod #AutomationAgency #ScaleYourBusiness #TimeManagement #SystemsThinking #MarketingAutomation #BusinessSystems #StartupLife #OnlineBusiness",
-  "chosen_idea": null,
+  "fb_caption": "I looked at this owner's daily workflow and nearly threw my laptop.\n\nHere's the BEFORE:\n• 14 browser tabs open at all times\n• Sticky notes everywhere\n• Leads sitting 3+ days with no follow-up\n• Manual invoicing spread across 4 spreadsheets\n• Calendar system = 'I'll remember it'\n\nHere's the AFTER (7 days later):\n✅ Centralised Google Workspace hub\n✅ GoHighLevel pipeline auto-nurturing leads\n✅ Claude AI handling repetitive comms\n✅ 60%+ admin time cut\n\nThis wasn't a marketing problem. It was a workflow problem. And it's the same one I see in nearly every business I audit.\n\nStill selling manually? Drop a 'AUDIT' below and I'll show you where you're leaking time.\n\n#AIAutomation #BusinessAutomation #Entrepreneur #WorkflowAutomation #Accelod",
   "ideas": [
     {
-      "concept": "A real client audit post showing a before/after workflow transformation. BEFORE: 14 browser tabs, sticky notes everywhere, leads sitting 3+ days with no follow-up, manual invoicing across 4 spreadsheets, 'I'll remember it' calendar system. AFTER: Centralised Google Workspace hub, GoHighLevel pipeline auto-nurturing leads, Claude AI handling repetitive comms, 60%+ admin time cut in 7 days. Facebook layout: left column has headline/badge/CTA/logo, right panel MUST be fully populated showing the AFTER results as a styled stat/list panel — never empty. CTA MUST be 'Still selling manually?' — do not use 'Sound familiar?'.",
+      "hook": "I looked at this owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days.",
       "title": "The Automation Audit",
-      "number": 1,
-      "hook": "I looked at this owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days."
+      "concept": "A real client audit post showing a before/after workflow transformation. BEFORE: 14 browser tabs, sticky notes everywhere, leads sitting 3+ days with no follow-up, manual invoicing across 4 spreadsheets, 'I'll remember it' calendar system. AFTER: Centralised Google Workspace hub, GoHighLevel pipeline auto-nurturing leads, Claude AI handling repetitive comms, 60%+ admin time cut in 7 days.",
+      "number": 1
     }
   ],
+  "ig_url": "https://i.ibb.co/4wp2qzwR/b9fed6c029ed.png",
   "ig_caption": "I looked at this owner's daily workflow and nearly threw my laptop 😅\n\nBefore the audit:\n→ 14 browser tabs open at once\n→ Sticky notes covering the monitor\n→ Leads sitting 3+ days with zero follow-up\n→ Manual invoicing across 4 spreadsheets\n→ 'I'll remember it' as a calendar system\n\n7 days later:\n✅ Centralised Google Workspace hub\n✅ GoHighLevel pipeline auto-nurturing every lead\n✅ Claude AI handling repetitive comms\n✅ 60%+ admin time cut\n\nThe business didn't have a sales problem. It had a systems problem.\n\nStill selling manually? Let's fix that.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #SmallBusinessOwner #WorkflowAutomation #ClaudeAI #GoogleWorkspace #SalesAutomation #LeadGeneration #CRM #DigitalTransformation #ProductivityHacks #BusinessGrowth #Accelod #AutomationAgency #ScaleYourBusiness #TimeManagement #SystemsThinking #MarketingAutomation #BusinessSystems #StartupLife #OnlineBusiness",
-  "ig_url": null,
   "fb_html": null,
-  "last_updated": "2026-06-11T23:15:54.938Z",
-  "version": 0,
-  "fb_url": null
+  "ig_html": null,
+  "fb_url": "https://i.ibb.co/4wp2qzwR/b9fed6c029ed.png",
+  "version": 1,
+  "last_updated": "2026-06-12T00:22:13.750Z",
+  "status": "awaiting_approval",
+  "chosen_idea": {
+    "hook": "I looked at this owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days.",
+    "title": "The Automation Audit",
+    "concept": "A real client audit post showing a before/after workflow transformation.",
+    "number": 1
+  }
 }
