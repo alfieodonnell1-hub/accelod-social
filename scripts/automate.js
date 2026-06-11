@@ -153,7 +153,7 @@ async function handleEmailReply(emailBody) {
 Ideas: ${state.ideas.map(i => `${i.number}. ${i.title}`).join(', ')}
 Which did they pick? Did they mention video?
 Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`))
-      .match(/\{[\s\S]*?\}/)[0]
+      .match(/\{[\s\S]*\}/)[0]
     );
     const chosen = state.ideas.find(i => i.number === parsed.choice);
     if (!chosen) {
@@ -213,7 +213,7 @@ Are they approving to post, requesting changes, or approving with a specific sch
 - Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 9am") → extract UTC ISO 8601 datetime into scheduledAt
 - Plain approval ("post it", "looks good") → queue as normal
 Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`))
-      .match(/\{[\s\S]*?\}/)[0]
+      .match(/\{[\s\S]*\}/)[0]
     );
 
     if (intent.intent === 'approve') {
