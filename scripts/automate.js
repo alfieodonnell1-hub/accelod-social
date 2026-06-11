@@ -74,7 +74,7 @@ HOOK: ${concept.hook}
 PLATFORM: ${platform} — canvas exactly ${isIg ? '1080px x 1350px' : '1200px x 630px'}, element id="post"
 LAYOUT: ${isIg
   ? 'Vertical stack: badge > headline > subtitle > content panel > CTA pill + logo'
-  : 'Left column (360px): badge + headline + subtitle + CTA pill + logo | Right panel (flex:1): content'}
+  : 'Left column (360px): badge + headline + subtitle + CTA pill + logo | Right panel (flex:1): dark content panel (#06101A) filled with 3-5 concrete stats, bullet points, or before/after items pulled directly from the concept — this panel must NEVER be empty'}
 
 BRAND RULES (follow exactly):
 - Background: #0B1929. Accents: #00D4FF and #33E1FF
@@ -156,6 +156,16 @@ Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`))
       .match(/\{[\s\S]*?\}/)[0]
     );
     const chosen = state.ideas.find(i => i.number === parsed.choice);
+    if (!chosen) {
+      await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+        subject: 'Re: Accelod Post Options – Which one?',
+        htmlBody: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+          <p>Couldn't work out which idea you meant. Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> to pick one.</p>
+          ${state.ideas.map(i => `<p><strong>${i.number}.</strong> ${i.title}</p>`).join('')}
+        </div>`
+      });
+      return;
+    }
     console.log('Generating post for option', parsed.choice);
 
     const [igHtml, fbHtml] = await Promise.all([
