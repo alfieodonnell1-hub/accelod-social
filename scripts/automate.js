@@ -187,7 +187,7 @@ Hook: ${chosen.hook}
 Return ONLY JSON: { "igCaption": "...", "fbCaption": "..." }
 
 Instagram caption: punchy, direct, max 10-12 lines, soft CTA ("Sound familiar?" / "Doing this manually?" etc), end with 20-25 hashtags (#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod etc).
-Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — NO hashtags, conversational tone, ends with a single engagement question to drive comments.`))
+Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 5 hashtags max (most relevant only, e.g. #AIAutomation #BusinessAutomation #Entrepreneur), conversational tone, ends with a single engagement question to drive comments.`))
       .match(/\{[\s\S]*\}/)[0]
     );
 
