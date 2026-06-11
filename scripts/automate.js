@@ -184,8 +184,10 @@ Title: ${chosen.title}
 Concept: ${chosen.concept}
 Hook: ${chosen.hook}
 
-Return ONLY JSON: { "igCaption": "caption + 20-25 hashtags", "fbCaption": "caption + 20-25 hashtags" }
-Style: punchy, direct, soft CTA ("Sound familiar?" etc), 20-25 hashtags (#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur etc)`))
+Return ONLY JSON: { "igCaption": "...", "fbCaption": "..." }
+
+Instagram caption: punchy, direct, max 10-12 lines, soft CTA ("Sound familiar?" / "Doing this manually?" etc), end with 20-25 hashtags (#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod etc).
+Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — NO hashtags, conversational tone, ends with a single engagement question to drive comments.`))
       .match(/\{[\s\S]*\}/)[0]
     );
 
@@ -206,9 +208,11 @@ Style: punchy, direct, soft CTA ("Sound familiar?" etc), 20-25 hashtags (#AIAuto
   } else if (state.status === 'awaiting_approval') {
     const intent = JSON.parse(
       (await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
-Are they approving to post, requesting changes, or approving with a specific schedule time?
-If they mention a schedule (e.g. "post tomorrow at 9am", "schedule for Friday 6pm"), convert it to an exact UTC ISO 8601 datetime string.
-Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null" }`))
+Are they approving to post, requesting changes, or approving with a specific schedule or immediate publish?
+- "post now" / "post immediately" / "go live now" → postNow: true
+- Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 9am") → extract UTC ISO 8601 datetime into scheduledAt
+- Plain approval ("post it", "looks good") → queue as normal
+Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`))
       .match(/\{[\s\S]*?\}/)[0]
     );
 
@@ -217,7 +221,8 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
         imageUrl: state.ig_url,
         igCaption: state.ig_caption,
         fbCaption: state.fb_caption,
-        scheduledAt: intent.scheduledAt || null
+        scheduledAt: intent.scheduledAt || null,
+        postNow: intent.postNow || false
       });
       writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
       console.log('Approved — posted to Buffer via N8N.');
