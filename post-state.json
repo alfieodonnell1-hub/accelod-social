@@ -1,33 +1,21 @@
 {
-  "status": "idle",
+  "wants_video": false,
+  "status": "awaiting_choice",
+  "ig_html": null,
+  "fb_caption": null,
+  "chosen_idea": null,
   "ideas": [
     {
+      "concept": "A real client audit post showing a before/after workflow transformation. BEFORE: 14 browser tabs, sticky notes everywhere, leads sitting 3+ days with no follow-up, manual invoicing across 4 spreadsheets, 'I'll remember it' calendar system. AFTER: Centralised Google Workspace hub, GoHighLevel pipeline auto-nurturing leads, Claude AI handling repetitive comms, 60%+ admin time cut in 7 days. Facebook layout: left column has headline/badge/CTA/logo, right panel MUST be fully populated showing the AFTER results as a styled stat/list panel — never empty. CTA MUST be 'Still selling manually?' — do not use 'Sound familiar?'.",
+      "title": "The Automation Audit",
       "number": 1,
-      "title": "The 3AM Email That Closed a $12K Deal",
-      "concept": "A behind-the-scenes breakdown of an N8N workflow connected to Claude AI and GoHighLevel that qualifies leads, drafts personalised replies, and books calls while the business owner sleeps. Visual would show a split screen: Alfie sleeping on one side, a glowing dashboard with notifications firing on the other.",
-      "hook": "While you were sleeping, this workflow made me $12K. Here's exactly how it's built."
-    },
-    {
-      "number": 2,
-      "title": "Stop Hiring. Start Automating.",
-      "concept": "A direct-to-camera or text-overlay post calling out business owners who keep throwing humans at problems software should solve. Show a side-by-side: a $4K/month VA vs. a Claude + Google Workspace + N8N stack doing the same job for £80/month. Hard numbers, no fluff.",
-      "hook": "Your next hire shouldn't be a person. It should be a workflow."
-    },
-    {
-      "number": 3,
-      "title": "The 5-Tool Stack Running My Entire Business",
-      "concept": "A carousel or short-form video revealing the exact tools Accelod uses to run client delivery, sales, and ops: Claude AI for thinking, N8N for connecting, GoHighLevel for selling, Google Workspace for everything else. Each slide shows one tool and the specific job it does, ending with a CTA to book a free automation audit.",
-      "hook": "I run a consultancy with 4 tools and zero employees. Here's the stack."
+      "hook": "I looked at this owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days."
     }
   ],
-  "chosen_idea": null,
-  "wants_video": false,
-  "version": 0,
-  "ig_caption": "While you were sleeping, this workflow made me $12K. Here's exactly how it's built. 💸\n\n3AM. Lead hits the form. N8N kicks in. Claude reads the message, qualifies the lead, drafts a personalised reply in my tone, then GoHighLevel books the call straight into my calendar. I woke up to a $12K deal already half-closed. ☕️\n\nThe old way: chase leads for days, lose them to faster competitors, burn out.\nThe new way: systems that sell while you sleep.\n\nSound familiar? If you're still manually replying to leads in 2025, you're leaving serious money on the table. DM me 'SLEEP' and I'll show you how we'd build this for your business. 🚀\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #LeadGeneration #SalesFunnel #DigitalMarketing #AIAgency #WorkflowAutomation #PassiveIncome #ScaleYourBusiness #SmallBusinessTips #MarketingAutomation #SaaS #TechStartup #AITools #BusinessGrowth #SolopreneurLife #AutomationNation #FutureOfWork #ContentCreator #Accelod #BuildInPublic",
-  "fb_caption": "While you were sleeping, this workflow made me $12K. Here's exactly how it's built. 💸\n\nPicture this: 3AM. A lead fills out the form. N8N triggers instantly. Claude AI reads the enquiry, qualifies the lead against my criteria, and drafts a personalised reply that sounds exactly like me. GoHighLevel then books the call straight into my calendar and sends the confirmation.\n\nI woke up to a $12K deal already halfway closed. No chasing. No back-and-forth. No missed opportunities.\n\nThe old way: manually reply to leads, lose them to faster competitors, burn out trying to keep up.\nThe new way: intelligent systems that qualify, respond, and convert while you sleep.\n\nSound familiar? If you're still manually handling every lead in 2025, you're leaving serious money on the table. Comment 'SLEEP' or DM me and I'll walk you through how we'd build this exact system for your business. 🚀\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #LeadGeneration #SalesFunnel #DigitalMarketing #AIAgency #WorkflowAutomation #PassiveIncome #ScaleYourBusiness #SmallBusinessTips #MarketingAutomation #SaaS #TechStartup #AITools #BusinessGrowth #SolopreneurLife #AutomationNation #FutureOfWork #Accelod #BuildInPublic",
+  "ig_caption": null,
   "ig_url": null,
-  "fb_url": null,
-  "ig_html": null,
   "fb_html": null,
-  "last_updated": "2026-06-11T22:13:30.567Z"
+  "last_updated": null,
+  "version": 0,
+  "fb_url": null
 }
