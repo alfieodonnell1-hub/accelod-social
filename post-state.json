@@ -9,18 +9,13 @@
       "number": 1
     }
   ],
-  "ig_url": "https://i.ibb.co/4wp2qzwR/b9fed6c029ed.png",
+  "ig_url": null,
   "ig_caption": "I looked at this owner's daily workflow and nearly threw my laptop 😅\n\nBefore the audit:\n→ 14 browser tabs open at once\n→ Sticky notes covering the monitor\n→ Leads sitting 3+ days with zero follow-up\n→ Manual invoicing across 4 spreadsheets\n→ 'I'll remember it' as a calendar system\n\n7 days later:\n✅ Centralised Google Workspace hub\n✅ GoHighLevel pipeline auto-nurturing every lead\n✅ Claude AI handling repetitive comms\n✅ 60%+ admin time cut\n\nThe business didn't have a sales problem. It had a systems problem.\n\nStill selling manually? Let's fix that.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #SmallBusinessOwner #WorkflowAutomation #ClaudeAI #GoogleWorkspace #SalesAutomation #LeadGeneration #CRM #DigitalTransformation #ProductivityHacks #BusinessGrowth #Accelod #AutomationAgency #ScaleYourBusiness #TimeManagement #SystemsThinking #MarketingAutomation #BusinessSystems #StartupLife #OnlineBusiness",
   "fb_html": null,
   "ig_html": null,
-  "fb_url": "https://i.ibb.co/4wp2qzwR/b9fed6c029ed.png",
-  "version": 1,
-  "last_updated": "2026-06-12T00:22:13.750Z",
-  "status": "awaiting_approval",
-  "chosen_idea": {
-    "hook": "I looked at this owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days.",
-    "title": "The Automation Audit",
-    "concept": "A real client audit post showing a before/after workflow transformation.",
-    "number": 1
-  }
+  "fb_url": null,
+  "version": 0,
+  "last_updated": "2026-06-20T12:59:10.368Z",
+  "status": "idle",
+  "chosen_idea": null
 }
