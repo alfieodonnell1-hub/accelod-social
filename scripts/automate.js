@@ -32,14 +32,16 @@ async function callN8n(url, payload) {
 async function uploadImage(imagePath, filename) {
   const content = fs.readFileSync(imagePath, { encoding: 'base64' });
   const apiUrl = `https://api.github.com/repos/alfieodonnell1-hub/accelod-social/contents/assets/${filename}`;
-  let sha;
-  try {
-    const check = await fetch(apiUrl, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' } });
-    if (check.ok) { const d = await check.json(); sha = d.sha; }
-  } catch {}
-  const body = { message: `assets: update ${filename} [skip ci]`, content, ...(sha ? { sha } : {}) };
-  const res = await fetch(apiUrl, { method: 'PUT', headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  if (!res.ok) throw new Error('GitHub image upload failed: ' + await res.text());
+  const ghHeaders = { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+  const getSha = async () => { const r = await fetch(apiUrl, { headers: ghHeaders }); return r.ok ? (await r.json()).sha : null; };
+  let fileSha = await getSha();
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const body = JSON.stringify({ message: `assets: update ${filename} [skip ci]`, content, ...(fileSha ? { sha: fileSha } : {}) });
+    const res = await fetch(apiUrl, { method: 'PUT', headers: ghHeaders, body });
+    if (res.ok) break;
+    if (res.status === 409) { fileSha = await getSha(); continue; }
+    throw new Error('GitHub image upload failed: ' + await res.text());
+  }
   return `https://raw.githubusercontent.com/alfieodonnell1-hub/accelod-social/main/assets/${filename}?t=${Date.now()}`;
 }
 
