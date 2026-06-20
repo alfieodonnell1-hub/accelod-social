@@ -1,19 +1,31 @@
 {
   "version": 0,
   "fb_url": null,
-  "status": "idle",
+  "status": "awaiting_choice",
   "ideas": [
     {
-      "hook": "I looked at this owner's daily workflow and nearly threw my laptop. Here's what we fixed in 7 days.",
       "number": 1,
-      "title": "The Automation Audit",
-      "concept": "A real client audit post showing a before/after workflow transformation. BEFORE: 14 browser tabs, sticky notes everywhere, leads sitting 3+ days with no follow-up, manual invoicing across 4 spreadsheets, 'I'll remember it' calendar system. AFTER: Centralised Google Workspace hub, GoHighLevel pipeline auto-nurturing leads, Claude AI handling repetitive comms, 60%+ admin time cut in 7 days. Facebook layout: left column has headline/badge/CTA/logo, right panel MUST be fully populated showing the AFTER results as a styled stat/list panel — never empty. CTA MUST be 'Still selling manually?' — do not use 'Sound familiar?'."
+      "title": "The 3AM Email Test",
+      "concept": "A post challenging business owners to check what's sitting in their inbox at 3AM that should've been handled hours ago. Visual would show a split screen: a stressed founder at a laptop vs. an N8N workflow dashboard quietly processing leads, replies, and bookings overnight. Demonstrates how Claude AI + N8N + GoHighLevel run the business while you sleep.",
+      "hook": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job."
+    },
+    {
+      "number": 2,
+      "title": "The $10K Hire You Don't Need",
+      "concept": "A direct callout post comparing the cost of hiring a VA or ops manager ($4-10K/month) vs. building a Claude-powered automation stack that handles emails, CRM updates, and client onboarding 24/7. Visual would be a mock job listing crossed out, replaced with a clean Accelod automation architecture diagram (Google Workspace → Claude → N8N → GoHighLevel).",
+      "hook": "Stop hiring humans to do robot work. You're not building a team, you're building a payroll problem."
+    },
+    {
+      "number": 3,
+      "title": "What I'd Automate First (If I Were You)",
+      "concept": "Alfie shares the exact 3 workflows he'd build in week one for any service business: lead qualification via Claude, follow-up sequences in GoHighLevel, and internal reporting through Google Workspace, all stitched together with N8N. Visual would be a whiteboard-style breakdown or Alfie talking to camera with workflow overlays animating in.",
+      "hook": "Everyone wants AI. Almost nobody knows where to start. Here's exactly what I'd build first if this was my business."
     }
   ],
   "wants_video": false,
   "fb_html": null,
   "chosen_idea": null,
-  "last_updated": "2026-06-20T13:11:47.845Z",
+  "last_updated": "2026-06-20T13:18:37.551Z",
   "ig_html": null,
   "fb_caption": "I looked at this owner's daily workflow and nearly threw my laptop. 🤯\n\nThe BEFORE:\n→ 14 browser tabs open at all times\n→ Sticky notes everywhere\n→ Leads ghosted for 3+ days\n→ Invoices across 4 spreadsheets\n→ \"I'll remember it\" calendar system\n\nThe AFTER (7 days later):\n✅ Centralised Google Workspace hub\n✅ GoHighLevel auto-nurturing leads\n✅ Claude AI handling repetitive comms\n✅ 60%+ admin time cut\n\nStill selling manually?\n\nWhat's the ONE task eating most of your week right now? 👇\n\n#AIAutomation #BusinessAutomation #Entrepreneur #Accelod",
   "ig_url": null,
