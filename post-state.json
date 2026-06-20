@@ -1,7 +1,7 @@
 {
   "version": 0,
   "fb_url": null,
-  "status": "idle",
+  "status": "awaiting_choice",
   "ideas": [
     {
       "number": 1,
@@ -25,7 +25,7 @@
   "wants_video": false,
   "fb_html": null,
   "chosen_idea": null,
-  "last_updated": "2026-06-20T14:23:07.826Z",
+  "last_updated": "2026-06-20T15:35:43.221Z",
   "ig_html": null,
   "fb_caption": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job.\n\nIt's 3AM. What's sitting in your inbox right now?\n\nLeads waiting for a reply.\nBookings you missed.\nFollow-ups that never went out.\n\nMeanwhile, your competitor's AI already replied, booked the call, and updated the CRM.\n\nClaude AI + N8N + GoHighLevel run the business while you sleep. You wake up to revenue, not a backlog.\n\nWhat's the one task eating your evenings that an AI agent should be handling by now?\n\n#AIAutomation #BusinessAutomation #Entrepreneur #Accelod",
   "ig_url": null,
