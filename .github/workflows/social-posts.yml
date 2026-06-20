@@ -36,6 +36,7 @@ jobs:
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
           EVENT_TYPE: ${{ github.event_name }}
           EMAIL_BODY: ${{ toJson(github.event.client_payload.email_body) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/automate.js
 
       - name: Commit state
