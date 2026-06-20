@@ -240,8 +240,8 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       console.log('Applying amendments:', intent.amendments);
 
       const [updIg, updFb] = await Promise.all([
-        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML.`),
-        claude(`Update this Facebook post HTML. Changes requested: ${intent.amendments}\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML.`)
+        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout.\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML.`),
+        claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format.\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML.`)
       ]);
 
       const igPath = path.join(TEMP_DIR, 'ig.png');
