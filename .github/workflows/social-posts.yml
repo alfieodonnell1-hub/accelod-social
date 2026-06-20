@@ -45,4 +45,5 @@ jobs:
           git config user.name "Accelod Bot"
           git add post-state.json
           git diff --staged --quiet || git commit -m "chore: update post state [skip ci]"
+          git pull --rebase origin main
           git push
