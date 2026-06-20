@@ -29,15 +29,18 @@ async function callN8n(url, payload) {
   return text ? JSON.parse(text) : {};
 }
 
-async function uploadToImgbb(imagePath) {
-  const params = new URLSearchParams({
-    key: process.env.IMGBB_API_KEY,
-    image: fs.readFileSync(imagePath, { encoding: 'base64' })
-  });
-  const res = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: params });
-  const data = await res.json();
-  if (!data.success) throw new Error('imgbb upload failed: ' + JSON.stringify(data));
-  return data.data.url;
+async function uploadImage(imagePath, filename) {
+  const content = fs.readFileSync(imagePath, { encoding: 'base64' });
+  const apiUrl = `https://api.github.com/repos/alfieodonnell1-hub/accelod-social/contents/assets/${filename}`;
+  let sha;
+  try {
+    const check = await fetch(apiUrl, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' } });
+    if (check.ok) { const d = await check.json(); sha = d.sha; }
+  } catch {}
+  const body = { message: `assets: update ${filename} [skip ci]`, content, ...(sha ? { sha } : {}) };
+  const res = await fetch(apiUrl, { method: 'PUT', headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  if (!res.ok) throw new Error('GitHub image upload failed: ' + await res.text());
+  return `https://raw.githubusercontent.com/alfieodonnell1-hub/accelod-social/main/assets/${filename}?t=${Date.now()}`;
 }
 
 async function claude(prompt) {
@@ -177,7 +180,7 @@ Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`))
     const fbPath = path.join(TEMP_DIR, 'fb.png');
     await takeScreenshot(igHtml, igPath);
     await takeScreenshot(fbHtml, fbPath);
-    const [igUrl, fbUrl] = await Promise.all([uploadToImgbb(igPath), uploadToImgbb(fbPath)]);
+    const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath, 'ig-latest.png'), uploadImage(fbPath, 'fb-latest.png')]);
 
     const caps = JSON.parse(
       (await claude(`Generate captions for this Accelod post:
@@ -248,7 +251,7 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       const fbPath = path.join(TEMP_DIR, 'fb.png');
       await takeScreenshot(updIg, igPath);
       await takeScreenshot(updFb, fbPath);
-      const [igUrl, fbUrl] = await Promise.all([uploadToImgbb(igPath), uploadToImgbb(fbPath)]);
+      const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath, 'ig-latest.png'), uploadImage(fbPath, 'fb-latest.png')]);
 
       await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
