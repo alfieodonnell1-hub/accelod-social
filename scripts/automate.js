@@ -219,7 +219,8 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
 
     if (intent.intent === 'approve') {
       await callN8n(process.env.N8N_IMAGE_WEBHOOK, {
-        imageUrl: state.ig_url,
+      igImageUrl: state.ig_url,
+      fbImageUrl: state.fb_url,
         igCaption: state.ig_caption,
         fbCaption: state.fb_caption,
         scheduledAt: intent.scheduledAt || null,
