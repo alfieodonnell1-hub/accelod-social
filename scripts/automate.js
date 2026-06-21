@@ -129,6 +129,25 @@ async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath
   });
 }
 
+async function handleResendPreview() {
+  const state = readState();
+  if (state.status !== 'awaiting_approval') {
+    console.log('No preview to resend — state is', state.status);
+    return;
+  }
+  if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR, { recursive: true });
+  const igPath = path.join(TEMP_DIR, 'ig.png');
+  const fbPath = path.join(TEMP_DIR, 'fb.png');
+  async function dlImg(url, dest) {
+    const r = await fetch(url);
+    fs.writeFileSync(dest, Buffer.from(await r.arrayBuffer()));
+  }
+  console.log('Downloading stored images for resend...');
+  await Promise.all([dlImg(state.ig_url, igPath), dlImg(state.fb_url, fbPath)]);
+  await sendPreviewEmail(state.ig_url, state.fb_url, state.version, null, igPath, fbPath);
+  console.log('Preview email resent for v' + state.version);
+}
+
 async function handleSchedule() {
   const state = readState();
   if (state.status !== 'idle') {
@@ -279,6 +298,14 @@ async function main() {
 
   if (eventType === 'repository_dispatch' && emailBody) {
     await handleEmailReply(emailBody);
+  } else if (eventType === 'workflow_dispatch') {
+    // Manual trigger: resend preview if one is pending, otherwise generate new ideas
+    const state = readState();
+    if (state.status === 'awaiting_approval') {
+      await handleResendPreview();
+    } else {
+      await handleSchedule();
+    }
   } else {
     await handleSchedule();
   }
