@@ -1,4 +1,4 @@
-﻿const Anthropic = require('@anthropic-ai/sdk');
+const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -108,8 +108,13 @@ async function takeScreenshot(html, outPath) {
 
 async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath) {
   const note = amendNote ? `<p style="color:#666"><em>Changes applied: ${amendNote}</em></p>` : '';
-  const igSrc = (igPath && fs.existsSync(igPath)) ? `data:image/png;base64,${fs.readFileSync(igPath, { encoding: 'base64' })}` : igUrl;
-  const fbSrc = (fbPath && fs.existsSync(fbPath)) ? `data:image/png;base64,${fs.readFileSync(fbPath, { encoding: 'base64' })}` : fbUrl;
+  // Resize to small JPEGs before embedding — keeps email under Gmail's 102KB clip limit
+  const igJpg = igPath ? igPath.replace('.png', '-email.jpg') : null;
+  const fbJpg = fbPath ? fbPath.replace('.png', '-email.jpg') : null;
+  if (igPath && fs.existsSync(igPath)) execSync(`convert "${igPath}" -resize 480x -quality 55 "${igJpg}"`);
+  if (fbPath && fs.existsSync(fbPath)) execSync(`convert "${fbPath}" -resize 560x -quality 55 "${fbJpg}"`);
+  const igSrc = (igJpg && fs.existsSync(igJpg)) ? `data:image/jpeg;base64,${fs.readFileSync(igJpg, { encoding: 'base64' })}` : igUrl;
+  const fbSrc = (fbJpg && fs.existsSync(fbJpg)) ? `data:image/jpeg;base64,${fs.readFileSync(fbJpg, { encoding: 'base64' })}` : fbUrl;
   await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
     subject: `Re: Accelod Post Options – ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })} – Preview v${version}`,
     htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
@@ -119,7 +124,7 @@ async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath
       <img src="${igSrc}" style="width:100%;max-width:540px;border-radius:8px;display:block;margin-bottom:16px"/>
       <h3>Facebook (1200×630)</h3>
       <img src="${fbSrc}" style="width:100%;max-width:640px;border-radius:8px;display:block;margin-bottom:24px"/>
-      <p>Reply with any changes — or say <strong>"post it"</strong> to publish to both platforms.</p>
+      <p>Reply with any changes — or say <strong>“post it”</strong> to publish to both platforms.</p>
     </div>`
   });
 }
@@ -143,7 +148,7 @@ async function handleSchedule() {
           <p style="margin:0 0 8px;color:#444">${i.concept}</p>
           <p style="margin:0;font-style:italic;color:#0088C8"><strong>Hook:</strong> "${i.hook}"</p>
         </div>`).join('')}
-      <p style="margin-top:24px">Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> — or just tell me which one you like. Add <strong>"video"</strong> if you want a video version.</p>
+      <p style="margin-top:24px">Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> — or just tell me which one you like. Add <strong>“video”</strong> if you want a video version.</p>
     </div>`
   });
 
@@ -240,7 +245,7 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       if (state.version >= 5) {
         await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
           subject: 'Re: Accelod Post – Revision limit reached',
-          htmlBody: '<p>5 revisions reached on this post. Reply <strong>"post it"</strong> to publish the current version, or <strong>"start over"</strong> to reset.</p>'
+          htmlBody: '<p>5 revisions reached on this post. Reply <strong>“post it”</strong> to publish the current version, or <strong>“start over”</strong> to reset.</p>'
         });
         return;
       }
