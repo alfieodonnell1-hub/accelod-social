@@ -135,15 +135,12 @@ async function handleResendPreview() {
     console.log('No preview to resend — state is', state.status);
     return;
   }
-  if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR, { recursive: true });
+  // Re-render from stored HTML — avoids CDN caching issues with raw.githubusercontent.com
   const igPath = path.join(TEMP_DIR, 'ig.png');
   const fbPath = path.join(TEMP_DIR, 'fb.png');
-  async function dlImg(url, dest) {
-    const r = await fetch(url);
-    fs.writeFileSync(dest, Buffer.from(await r.arrayBuffer()));
-  }
-  console.log('Downloading stored images for resend...');
-  await Promise.all([dlImg(state.ig_url, igPath), dlImg(state.fb_url, fbPath)]);
+  console.log('Re-rendering stored HTML for resend...');
+  await takeScreenshot(state.ig_html, igPath);
+  await takeScreenshot(state.fb_html, fbPath);
   await sendPreviewEmail(state.ig_url, state.fb_url, state.version, null, igPath, fbPath);
   console.log('Preview email resent for v' + state.version);
 }
@@ -250,8 +247,8 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
 
     if (intent.intent === 'approve') {
       await callN8n(process.env.N8N_IMAGE_WEBHOOK, {
-      igImageUrl: state.ig_url,
-      fbImageUrl: state.fb_url,
+        igImageUrl: state.ig_url,
+        fbImageUrl: state.fb_url,
         igCaption: state.ig_caption,
         fbCaption: state.fb_caption,
         scheduledAt: intent.scheduledAt || null,
@@ -299,7 +296,6 @@ async function main() {
   if (eventType === 'repository_dispatch' && emailBody) {
     await handleEmailReply(emailBody);
   } else if (eventType === 'workflow_dispatch') {
-    // Manual trigger: resend preview if one is pending, otherwise generate new ideas
     const state = readState();
     if (state.status === 'awaiting_approval') {
       await handleResendPreview();
