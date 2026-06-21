@@ -39,19 +39,33 @@ async function uploadImage(imagePath, filename) {
     const body = JSON.stringify({ message: `assets: update ${filename} [skip ci]`, content, ...(fileSha ? { sha: fileSha } : {}) });
     const res = await fetch(apiUrl, { method: 'PUT', headers: ghHeaders, body });
     if (res.ok) break;
-    if (res.status === 409) { fileSha = await getSha(); continue; }
+    if (res.status === 409) {
+      await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+      fileSha = await getSha();
+      continue;
+    }
     throw new Error('GitHub image upload failed: ' + await res.text());
   }
   return `https://raw.githubusercontent.com/alfieodonnell1-hub/accelod-social/main/assets/${filename}?t=${Date.now()}`;
 }
 
-async function claude(prompt) {
+async function claude(prompt, maxTokens = 8192) {
   const msg = await anthropic.messages.create({
     model: 'claude-opus-4-7',
-    max_tokens: 4096,
+    max_tokens: maxTokens,
     messages: [{ role: 'user', content: prompt }]
   });
   return msg.content[0].text;
+}
+
+function parseJSON(text, context) {
+  try {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('No JSON object found in response');
+    return JSON.parse(match[0]);
+  } catch (e) {
+    throw new Error(`JSON parse failed in ${context}: ${e.message}`);
+  }
 }
 
 async function generateIdeas() {
@@ -67,8 +81,8 @@ Return ONLY valid JSON:
     { "number": 2, "title": "...", "concept": "...", "hook": "..." },
     { "number": 3, "title": "...", "concept": "...", "hook": "..." }
   ]
-}`);
-  return JSON.parse(raw.match(/\{[\s\S]*\}/)[0]);
+}`, 4096);
+  return parseJSON(raw, 'generateIdeas');
 }
 
 async function generatePostHTML(concept, platform) {
@@ -104,6 +118,7 @@ async function takeScreenshot(html, outPath) {
   const tmp = path.join(TEMP_DIR, 'post.html');
   fs.writeFileSync(tmp, html);
   execSync(`node "${path.join(__dirname, 'screenshot-cloud.js')}" "${tmp}" "${outPath}"`, { stdio: 'inherit' });
+  if (!fs.existsSync(outPath)) throw new Error(`Screenshot failed: ${outPath} was not created`);
 }
 
 async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath) {
@@ -135,7 +150,7 @@ async function handleResendPreview() {
     console.log('No preview to resend — state is', state.status);
     return;
   }
-  // Re-render from stored HTML — avoids CDN caching issues with raw.githubusercontent.com
+  if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot resend preview');
   const igPath = path.join(TEMP_DIR, 'ig.png');
   const fbPath = path.join(TEMP_DIR, 'fb.png');
   console.log('Re-rendering stored HTML for resend...');
@@ -177,13 +192,16 @@ async function handleEmailReply(emailBody) {
   console.log('State:', state.status, '| Reply preview:', emailBody.slice(0, 80));
 
   if (state.status === 'awaiting_choice') {
-    const parsed = JSON.parse(
-      (await claude(`User received 3 post ideas and replied: "${emailBody}"
+    if (!Array.isArray(state.ideas)) throw new Error('State is missing ideas array');
+
+    const parsed = parseJSON(
+      await claude(`User received 3 post ideas and replied: "${emailBody}"
 Ideas: ${state.ideas.map(i => `${i.number}. ${i.title}`).join(', ')}
 Which did they pick? Did they mention video?
-Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`))
-      .match(/\{[\s\S]*\}/)[0]
+Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`, 512),
+      'choice parse'
     );
+
     const chosen = state.ideas.find(i => i.number === parsed.choice);
     if (!chosen) {
       await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
@@ -207,8 +225,8 @@ Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`))
     await takeScreenshot(fbHtml, fbPath);
     const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath, 'ig-latest.png'), uploadImage(fbPath, 'fb-latest.png')]);
 
-    const caps = JSON.parse(
-      (await claude(`Generate captions for this Accelod post:
+    const caps = parseJSON(
+      await claude(`Generate captions for this Accelod post:
 Title: ${chosen.title}
 Concept: ${chosen.concept}
 Hook: ${chosen.hook}
@@ -216,8 +234,8 @@ Hook: ${chosen.hook}
 Return ONLY JSON: { "igCaption": "...", "fbCaption": "..." }
 
 Instagram caption: punchy, direct, max 10-12 lines, soft CTA ("Sound familiar?" / "Doing this manually?" etc), end with 20-25 hashtags (#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod etc).
-Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 5 hashtags max (most relevant only, e.g. #AIAutomation #BusinessAutomation #Entrepreneur), conversational tone, ends with a single engagement question to drive comments.`))
-      .match(/\{[\s\S]*\}/)[0]
+Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 5 hashtags max (most relevant only, e.g. #AIAutomation #BusinessAutomation #Entrepreneur), conversational tone, ends with a single engagement question to drive comments.`, 1024),
+      'captions parse'
     );
 
     await sendPreviewEmail(igUrl, fbUrl, 1, null, igPath, fbPath);
@@ -235,14 +253,14 @@ Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 
     });
 
   } else if (state.status === 'awaiting_approval') {
-    const intent = JSON.parse(
-      (await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
+    const intent = parseJSON(
+      await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
 Are they approving to post, requesting changes, or approving with a specific schedule or immediate publish?
 - "post now" / "post immediately" / "go live now" → postNow: true
 - Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 9am") → extract UTC ISO 8601 datetime into scheduledAt
 - Plain approval ("post it", "looks good") → queue as normal
-Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`))
-      .match(/\{[\s\S]*\}/)[0]
+Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`, 512),
+      'intent parse'
     );
 
     if (intent.intent === 'approve') {
@@ -265,6 +283,7 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
         });
         return;
       }
+      if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot apply amendments');
       console.log('Applying amendments:', intent.amendments);
 
       const [updIg, updFb] = await Promise.all([
@@ -290,7 +309,12 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
 async function main() {
   const eventType = process.env.EVENT_TYPE;
   const rawBody = process.env.EMAIL_BODY;
-  const emailBody = rawBody && rawBody !== 'null' && rawBody !== '""' ? JSON.parse(rawBody) : null;
+  let emailBody = null;
+  try {
+    emailBody = rawBody && rawBody !== 'null' && rawBody !== '""' ? JSON.parse(rawBody) : null;
+  } catch (e) {
+    console.error('Failed to parse EMAIL_BODY:', e.message);
+  }
   console.log('Event:', eventType, '| Email reply:', !!emailBody);
 
   if (eventType === 'repository_dispatch' && emailBody) {
