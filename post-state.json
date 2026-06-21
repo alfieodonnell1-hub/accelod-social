@@ -1,33 +1,15 @@
 {
-  "version": 0,
-  "fb_url": null,
   "status": "idle",
-  "ideas": [
-    {
-      "number": 1,
-      "title": "The 3AM Email Test",
-      "concept": "A post challenging business owners to check what's sitting in their inbox at 3AM that should've been handled hours ago. Visual would show a split screen: a stressed founder at a laptop vs. an N8N workflow dashboard quietly processing leads, replies, and bookings overnight. Demonstrates how Claude AI + N8N + GoHighLevel run the business while you sleep.",
-      "hook": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job."
-    },
-    {
-      "number": 2,
-      "title": "The $10K Hire You Don't Need",
-      "concept": "A direct callout post comparing the cost of hiring a VA or ops manager ($4-10K/month) vs. building a Claude-powered automation stack that handles emails, CRM updates, and client onboarding 24/7. Visual would be a mock job listing crossed out, replaced with a clean Accelod automation architecture diagram (Google Workspace → Claude → N8N → GoHighLevel).",
-      "hook": "Stop hiring humans to do robot work. You're not building a team, you're building a payroll problem."
-    },
-    {
-      "number": 3,
-      "title": "What I'd Automate First (If I Were You)",
-      "concept": "Alfie shares the exact 3 workflows he'd build in week one for any service business: lead qualification via Claude, follow-up sequences in GoHighLevel, and internal reporting through Google Workspace, all stitched together with N8N. Visual would be a whiteboard-style breakdown or Alfie talking to camera with workflow overlays animating in.",
-      "hook": "Everyone wants AI. Almost nobody knows where to start. Here's exactly what I'd build first if this was my business."
-    }
-  ],
-  "wants_video": false,
-  "fb_html": null,
-  "chosen_idea": null,
-  "last_updated": "2026-06-21T22:17:15.984Z",
-  "ig_html": null,
+  "version": 0,
+  "repost_scheduled_at": "2026-06-22T07:00:00.000Z",
+  "ig_caption": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job.\n\nIt's 3AM. Check your inbox.\n\nHow many leads are sitting there unanswered? How many booking requests went cold? How many replies needed a human 6 hours ago?\n\nMeanwhile, the smart founders? Their N8N workflows are quietly qualifying leads, Claude AI is drafting personalized replies, and GoHighLevel is booking calls straight into their calendar.\n\nThey wake up to revenue. You wake up to a backlog.\n\nThe difference isn't hustle. It's infrastructure.\n\nSound familiar? Time to let the machines work the night shift.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod #SmallBusiness #SaaS #LeadGeneration #DigitalMarketing #StartupLife #FounderLife #PassiveIncome #Productivity #TechStack #MarketingAutomation #SalesAutomation #AIForBusiness #NoCode #ScaleYourBusiness #OnlineBusiness",
   "fb_caption": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job.\n\nIt's 3AM. Check your inbox right now.\n\nHow many leads are sitting unanswered? How many booking requests went cold while you slept?\n\nThe founders winning right now have N8N workflows qualifying leads, Claude AI drafting replies, and GoHighLevel booking calls overnight.\n\nThey wake up to revenue. You wake up to a backlog.\n\nThe difference isn't hustle. It's infrastructure.\n\nWhat's sitting in your inbox right now that should've been handled hours ago?\n\n#AIAutomation #BusinessAutomation #Entrepreneur #ClaudeAI",
+  "chosen_idea": null,
+  "ideas": [],
+  "ig_html": null,
+  "fb_html": null,
   "ig_url": null,
-  "ig_caption": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job.\n\nIt's 3AM. Check your inbox.\n\nHow many leads are sitting there unanswered? How many booking requests went cold? How many replies needed a human 6 hours ago?\n\nMeanwhile, the smart founders? Their N8N workflows are quietly qualifying leads, Claude AI is drafting personalized replies, and GoHighLevel is booking calls straight into their calendar.\n\nThey wake up to revenue. You wake up to a backlog.\n\nThe difference isn't hustle. It's infrastructure.\n\nSound familiar? Time to let the machines work the night shift.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod #SmallBusiness #SaaS #LeadGeneration #DigitalMarketing #StartupLife #FounderLife #PassiveIncome #Productivity #TechStack #MarketingAutomation #SalesAutomation #AIForBusiness #NoCode #ScaleYourBusiness #OnlineBusiness"
+  "fb_url": null,
+  "wants_video": false,
+  "last_updated": "2026-06-21T22:17:15.984Z"
 }

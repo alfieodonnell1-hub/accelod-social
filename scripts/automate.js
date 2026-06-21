@@ -29,7 +29,6 @@ async function callN8n(url, payload) {
   return text ? JSON.parse(text) : {};
 }
 
-// Uploads to imgbb with API key — authenticated uploads are permanent (no expiry)
 async function uploadImage(imagePath) {
   const base64 = fs.readFileSync(imagePath, { encoding: 'base64' });
   const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
@@ -116,7 +115,6 @@ async function takeScreenshot(html, outPath) {
 
 async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath) {
   const note = amendNote ? `<p style="color:#666"><em>Changes applied: ${amendNote}</em></p>` : '';
-  // Resize to small JPEGs before embedding — keeps email under Gmail's 102KB clip limit
   const igJpg = igPath ? igPath.replace('.png', '-email.jpg') : null;
   const fbJpg = fbPath ? fbPath.replace('.png', '-email.jpg') : null;
   if (igPath && fs.existsSync(igPath)) execSync(`convert "${igPath}" -resize 480x -quality 55 "${igJpg}"`);
@@ -137,12 +135,49 @@ async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath
   });
 }
 
+async function handleRepost() {
+  const state = readState();
+  if (!state.repost_scheduled_at) { console.log('No repost pending.'); return; }
+  if (!state.ig_caption || !state.fb_caption) throw new Error('No captions in state for repost');
+
+  if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR, { recursive: true });
+  const igPath = path.join(TEMP_DIR, 'ig.png');
+  const fbPath = path.join(TEMP_DIR, 'fb.png');
+
+  async function downloadAsset(assetPath, dest) {
+    const apiUrl = `https://api.github.com/repos/alfieodonnell1-hub/accelod-social/contents/${assetPath}`;
+    const r = await fetch(apiUrl, { headers: { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json' } });
+    if (!r.ok) throw new Error(`GitHub asset download failed: ${r.status}`);
+    const json = await r.json();
+    fs.writeFileSync(dest, Buffer.from(json.content, 'base64'));
+  }
+
+  console.log('Downloading images from GitHub assets...');
+  await Promise.all([
+    downloadAsset('assets/ig-latest.png', igPath),
+    downloadAsset('assets/fb-latest.png', fbPath)
+  ]);
+
+  console.log('Uploading to imgbb...');
+  const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
+
+  console.log('Scheduling post for', state.repost_scheduled_at);
+  await callN8n(process.env.N8N_IMAGE_WEBHOOK, {
+    igImageUrl: igUrl,
+    fbImageUrl: fbUrl,
+    igCaption: state.ig_caption,
+    fbCaption: state.fb_caption,
+    scheduledAt: state.repost_scheduled_at,
+    postNow: false
+  });
+
+  writeState({ repost_scheduled_at: null });
+  console.log('Repost scheduled successfully.');
+}
+
 async function handleResendPreview() {
   const state = readState();
-  if (state.status !== 'awaiting_approval') {
-    console.log('No preview to resend — state is', state.status);
-    return;
-  }
+  if (state.status !== 'awaiting_approval') { console.log('No preview to resend — state is', state.status); return; }
   if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot resend preview');
   const igPath = path.join(TEMP_DIR, 'ig.png');
   const fbPath = path.join(TEMP_DIR, 'fb.png');
@@ -186,7 +221,6 @@ async function handleEmailReply(emailBody) {
 
   if (state.status === 'awaiting_choice') {
     if (!Array.isArray(state.ideas)) throw new Error('State is missing ideas array');
-
     const parsed = parseJSON(
       await claude(`User received 3 post ideas and replied: "${emailBody}"
 Ideas: ${state.ideas.map(i => `${i.number}. ${i.title}`).join(', ')}
@@ -194,7 +228,6 @@ Which did they pick? Did they mention video?
 Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`, 512),
       'choice parse'
     );
-
     const chosen = state.ideas.find(i => i.number === parsed.choice);
     if (!chosen) {
       await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
@@ -207,17 +240,12 @@ Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`, 512),
       return;
     }
     console.log('Generating post for option', parsed.choice);
-
-    const [igHtml, fbHtml] = await Promise.all([
-      generatePostHTML(chosen, 'instagram'),
-      generatePostHTML(chosen, 'facebook')
-    ]);
+    const [igHtml, fbHtml] = await Promise.all([generatePostHTML(chosen, 'instagram'), generatePostHTML(chosen, 'facebook')]);
     const igPath = path.join(TEMP_DIR, 'ig.png');
     const fbPath = path.join(TEMP_DIR, 'fb.png');
     await takeScreenshot(igHtml, igPath);
     await takeScreenshot(fbHtml, fbPath);
     const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
-
     const caps = parseJSON(
       await claude(`Generate captions for this Accelod post:
 Title: ${chosen.title}
@@ -230,20 +258,8 @@ Instagram caption: punchy, direct, max 10-12 lines, soft CTA ("Sound familiar?" 
 Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 5 hashtags max (most relevant only, e.g. #AIAutomation #BusinessAutomation #Entrepreneur), conversational tone, ends with a single engagement question to drive comments.`, 1024),
       'captions parse'
     );
-
     await sendPreviewEmail(igUrl, fbUrl, 1, null, igPath, fbPath);
-    writeState({
-      status: 'awaiting_approval',
-      chosen_idea: chosen,
-      wants_video: parsed.wantsVideo,
-      ig_caption: caps.igCaption,
-      fb_caption: caps.fbCaption,
-      ig_url: igUrl,
-      fb_url: fbUrl,
-      ig_html: igHtml,
-      fb_html: fbHtml,
-      version: 1
-    });
+    writeState({ status: 'awaiting_approval', chosen_idea: chosen, wants_video: parsed.wantsVideo, ig_caption: caps.igCaption, fb_caption: caps.fbCaption, ig_url: igUrl, fb_url: fbUrl, ig_html: igHtml, fb_html: fbHtml, version: 1 });
 
   } else if (state.status === 'awaiting_approval') {
     const intent = parseJSON(
@@ -255,45 +271,29 @@ Are they approving to post, requesting changes, or approving with a specific sch
 Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`, 512),
       'intent parse'
     );
-
     if (intent.intent === 'approve') {
-      await callN8n(process.env.N8N_IMAGE_WEBHOOK, {
-        igImageUrl: state.ig_url,
-        fbImageUrl: state.fb_url,
-        igCaption: state.ig_caption,
-        fbCaption: state.fb_caption,
-        scheduledAt: intent.scheduledAt || null,
-        postNow: intent.postNow || false
-      });
+      await callN8n(process.env.N8N_IMAGE_WEBHOOK, { igImageUrl: state.ig_url, fbImageUrl: state.fb_url, igCaption: state.ig_caption, fbCaption: state.fb_caption, scheduledAt: intent.scheduledAt || null, postNow: intent.postNow || false });
       writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
       console.log('Approved — posted to Buffer via N8N.');
-
     } else {
       if (state.version >= 5) {
-        await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
-          subject: 'Re: Accelod Post – Revision limit reached',
-          htmlBody: '<p>5 revisions reached on this post. Reply <strong>“post it”</strong> to publish the current version, or <strong>“start over”</strong> to reset.</p>'
-        });
+        await callN8n(process.env.N8N_EMAIL_WEBHOOK, { subject: 'Re: Accelod Post – Revision limit reached', htmlBody: '<p>5 revisions reached. Reply <strong>“post it”</strong> to publish or <strong>“start over”</strong> to reset.</p>' });
         return;
       }
       if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot apply amendments');
       console.log('Applying amendments:', intent.amendments);
-
       const [updIg, updFb] = await Promise.all([
         claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout.\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML.`),
         claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format.\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML.`)
       ]);
-
       const igPath = path.join(TEMP_DIR, 'ig.png');
       const fbPath = path.join(TEMP_DIR, 'fb.png');
       await takeScreenshot(updIg, igPath);
       await takeScreenshot(updFb, fbPath);
       const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
-
       await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments, igPath, fbPath);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
     }
-
   } else {
     console.log('No active post session — reply ignored.');
   }
@@ -314,7 +314,9 @@ async function main() {
     await handleEmailReply(emailBody);
   } else if (eventType === 'workflow_dispatch') {
     const state = readState();
-    if (state.status === 'awaiting_approval') {
+    if (state.repost_scheduled_at) {
+      await handleRepost();
+    } else if (state.status === 'awaiting_approval') {
       await handleResendPreview();
     } else {
       await handleSchedule();
