@@ -29,24 +29,17 @@ async function callN8n(url, payload) {
   return text ? JSON.parse(text) : {};
 }
 
-async function uploadImage(imagePath, filename) {
-  const content = fs.readFileSync(imagePath, { encoding: 'base64' });
-  const apiUrl = `https://api.github.com/repos/alfieodonnell1-hub/accelod-social/contents/assets/${filename}`;
-  const ghHeaders = { Authorization: `Bearer ${process.env.GITHUB_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
-  const getSha = async () => { const r = await fetch(apiUrl, { headers: ghHeaders }); return r.ok ? (await r.json()).sha : null; };
-  let fileSha = await getSha();
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const body = JSON.stringify({ message: `assets: update ${filename} [skip ci]`, content, ...(fileSha ? { sha: fileSha } : {}) });
-    const res = await fetch(apiUrl, { method: 'PUT', headers: ghHeaders, body });
-    if (res.ok) break;
-    if (res.status === 409) {
-      await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
-      fileSha = await getSha();
-      continue;
-    }
-    throw new Error('GitHub image upload failed: ' + await res.text());
-  }
-  return `https://raw.githubusercontent.com/alfieodonnell1-hub/accelod-social/main/assets/${filename}?t=${Date.now()}`;
+// Uploads to imgbb with API key — authenticated uploads are permanent (no expiry)
+async function uploadImage(imagePath) {
+  const base64 = fs.readFileSync(imagePath, { encoding: 'base64' });
+  const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ image: base64 }).toString()
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error('imgbb upload failed: ' + JSON.stringify(data.error));
+  return data.data.url;
 }
 
 async function claude(prompt, maxTokens = 8192) {
@@ -223,7 +216,7 @@ Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`, 512),
     const fbPath = path.join(TEMP_DIR, 'fb.png');
     await takeScreenshot(igHtml, igPath);
     await takeScreenshot(fbHtml, fbPath);
-    const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath, 'ig-latest.png'), uploadImage(fbPath, 'fb-latest.png')]);
+    const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
 
     const caps = parseJSON(
       await claude(`Generate captions for this Accelod post:
@@ -295,7 +288,7 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       const fbPath = path.join(TEMP_DIR, 'fb.png');
       await takeScreenshot(updIg, igPath);
       await takeScreenshot(updFb, fbPath);
-      const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath, 'ig-latest.png'), uploadImage(fbPath, 'fb-latest.png')]);
+      const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
 
       await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments, igPath, fbPath);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
