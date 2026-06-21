@@ -1,4 +1,4 @@
-const Anthropic = require('@anthropic-ai/sdk');
+﻿const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -106,17 +106,19 @@ async function takeScreenshot(html, outPath) {
   execSync(`node "${path.join(__dirname, 'screenshot-cloud.js')}" "${tmp}" "${outPath}"`, { stdio: 'inherit' });
 }
 
-async function sendPreviewEmail(igUrl, fbUrl, version, amendNote) {
+async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath) {
   const note = amendNote ? `<p style="color:#666"><em>Changes applied: ${amendNote}</em></p>` : '';
+  const igSrc = (igPath && fs.existsSync(igPath)) ? `data:image/png;base64,${fs.readFileSync(igPath, { encoding: 'base64' })}` : igUrl;
+  const fbSrc = (fbPath && fs.existsSync(fbPath)) ? `data:image/png;base64,${fs.readFileSync(fbPath, { encoding: 'base64' })}` : fbUrl;
   await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
     subject: `Re: Accelod Post Options – ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' })} – Preview v${version}`,
     htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
       <h2 style="color:#0B1929">Your post preview — v${version}</h2>
       ${note}
       <h3>Instagram (1080×1350)</h3>
-      <img src="${igUrl}" style="width:100%;max-width:540px;border-radius:8px;display:block;margin-bottom:16px"/>
+      <img src="${igSrc}" style="width:100%;max-width:540px;border-radius:8px;display:block;margin-bottom:16px"/>
       <h3>Facebook (1200×630)</h3>
-      <img src="${fbUrl}" style="width:100%;max-width:640px;border-radius:8px;display:block;margin-bottom:24px"/>
+      <img src="${fbSrc}" style="width:100%;max-width:640px;border-radius:8px;display:block;margin-bottom:24px"/>
       <p>Reply with any changes — or say <strong>"post it"</strong> to publish to both platforms.</p>
     </div>`
   });
@@ -197,7 +199,7 @@ Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 
       .match(/\{[\s\S]*\}/)[0]
     );
 
-    await sendPreviewEmail(igUrl, fbUrl, 1, null);
+    await sendPreviewEmail(igUrl, fbUrl, 1, null, igPath, fbPath);
     writeState({
       status: 'awaiting_approval',
       chosen_idea: chosen,
@@ -255,7 +257,7 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       await takeScreenshot(updFb, fbPath);
       const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath, 'ig-latest.png'), uploadImage(fbPath, 'fb-latest.png')]);
 
-      await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments);
+      await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments, igPath, fbPath);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
     }
 
