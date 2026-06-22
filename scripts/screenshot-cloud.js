@@ -14,7 +14,7 @@ async function screenshot(htmlFile, outFile) {
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1800, height: 1400, deviceScaleFactor: 1 });
-  await page.goto('file:///' + absHtml.replace(/\\/g, '/'), { waitUntil: 'networkidle0', timeout: 20000 });
+  await page.goto('file:///' + absHtml.replace(/\\/g, '/'), { waitUntil: 'networkidle2', timeout: 30000 });
 
   // Force-load every font variant used in posts, then allow a paint buffer
   await page.evaluate(async () => {
@@ -29,7 +29,7 @@ async function screenshot(htmlFile, outFile) {
       document.fonts.load('400 1em "JetBrains Mono"'),
     ]);
   });
-  await new Promise(r => setTimeout(r, 400));
+  await new Promise(r => setTimeout(r, 800));
 
   const el = await page.$('#post');
   if (!el) { console.error('No #post element found.'); await browser.close(); process.exit(1); }

@@ -50,6 +50,11 @@ async function claude(prompt, maxTokens = 8192) {
   return msg.content[0].text;
 }
 
+function stripHtml(text) {
+  // Claude sometimes wraps HTML in markdown fences despite being told not to
+  return text.replace(/^```(?:html)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+}
+
 function parseJSON(text, context) {
   try {
     const match = text.match(/\{[\s\S]*\}/);
@@ -101,8 +106,8 @@ BRAND RULES (follow exactly):
 - Dot-grid radial texture bg + top-left radial glow element
 - Include export PNG button + dom-to-image-more@3.3.0 CDN script
 
-Return ONLY the complete HTML file — no markdown, no code fences, no explanation.`);
-  return raw;
+Return ONLY the complete HTML file — no markdown, no code fences, no explanation.`, 16384);
+  return stripHtml(raw);
 }
 
 async function takeScreenshot(html, outPath) {
@@ -282,10 +287,12 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       }
       if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot apply amendments');
       console.log('Applying amendments:', intent.amendments);
-      const [updIg, updFb] = await Promise.all([
-        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout.\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML.`),
-        claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format.\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML.`)
+      const [updIgRaw, updFbRaw] = await Promise.all([
+        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout.\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384),
+        claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format.\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384)
       ]);
+      const updIg = stripHtml(updIgRaw);
+      const updFb = stripHtml(updFbRaw);
       const igPath = path.join(TEMP_DIR, 'ig.png');
       const fbPath = path.join(TEMP_DIR, 'fb.png');
       await takeScreenshot(updIg, igPath);
