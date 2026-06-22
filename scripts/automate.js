@@ -226,13 +226,21 @@ async function handleEmailReply(emailBody) {
 
   if (state.status === 'awaiting_choice') {
     if (!Array.isArray(state.ideas)) throw new Error('State is missing ideas array');
-    const parsed = parseJSON(
-      await claude(`User received 3 post ideas and replied: "${emailBody}"
+    const choiceMatch = emailBody.match(/\b([123])\b/);
+    const wantsVideo = /\bvideo\b/i.test(emailBody);
+    let parsed;
+    if (choiceMatch) {
+      console.log('Quick choice detected — skipping Claude parse');
+      parsed = { choice: parseInt(choiceMatch[1]), wantsVideo };
+    } else {
+      parsed = parseJSON(
+        await claude(`User received 3 post ideas and replied: "${emailBody}"
 Ideas: ${state.ideas.map(i => `${i.number}. ${i.title}`).join(', ')}
 Which did they pick? Did they mention video?
 Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`, 512),
-      'choice parse'
-    );
+        'choice parse'
+      );
+    }
     const chosen = state.ideas.find(i => i.number === parsed.choice);
     if (!chosen) {
       await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
@@ -267,15 +275,24 @@ Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 
     writeState({ status: 'awaiting_approval', chosen_idea: chosen, wants_video: parsed.wantsVideo, ig_caption: caps.igCaption, fb_caption: caps.fbCaption, ig_url: igUrl, fb_url: fbUrl, ig_html: igHtml, fb_html: fbHtml, version: 1 });
 
   } else if (state.status === 'awaiting_approval') {
-    const intent = parseJSON(
-      await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
+    const lower = emailBody.toLowerCase().trim();
+    const quickApprove = /^(post(\s+it)?|go(\s+(ahead|live))?|approve[d]?|looks?\s+good|yes|yep|yeah|send(\s+it)?)[\s!.]*$/.test(lower);
+    const quickPostNow = /\b(post\s+now|go\s+live\s+now|immediately|right\s+now)\b/.test(lower);
+    let intent;
+    if (quickApprove || quickPostNow) {
+      console.log('Quick approval detected — skipping Claude intent parse');
+      intent = { intent: 'approve', amendments: null, scheduledAt: null, postNow: quickPostNow };
+    } else {
+      intent = parseJSON(
+        await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
 Are they approving to post, requesting changes, or approving with a specific schedule or immediate publish?
 - "post now" / "post immediately" / "go live now" → postNow: true
 - Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 9am") → extract UTC ISO 8601 datetime into scheduledAt
 - Plain approval ("post it", "looks good") → queue as normal
 Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`, 512),
-      'intent parse'
-    );
+        'intent parse'
+      );
+    }
     if (intent.intent === 'approve') {
       await callN8n(process.env.N8N_IMAGE_WEBHOOK, { igImageUrl: state.ig_url, fbImageUrl: state.fb_url, igCaption: state.ig_caption, fbCaption: state.fb_caption, scheduledAt: intent.scheduledAt || null, postNow: intent.postNow || false });
       writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
