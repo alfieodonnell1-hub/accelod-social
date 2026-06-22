@@ -1,15 +1,34 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "repost_scheduled_at": null,
   "ig_caption": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job.\n\nIt's 3AM. Check your inbox.\n\nHow many leads are sitting there unanswered? How many booking requests went cold? How many replies needed a human 6 hours ago?\n\nMeanwhile, the smart founders? Their N8N workflows are quietly qualifying leads, Claude AI is drafting personalized replies, and GoHighLevel is booking calls straight into their calendar.\n\nThey wake up to revenue. You wake up to a backlog.\n\nThe difference isn't hustle. It's infrastructure.\n\nSound familiar? Time to let the machines work the night shift.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod #SmallBusiness #SaaS #LeadGeneration #DigitalMarketing #StartupLife #FounderLife #PassiveIncome #Productivity #TechStack #MarketingAutomation #SalesAutomation #AIForBusiness #NoCode #ScaleYourBusiness #OnlineBusiness",
   "fb_caption": "If your business stops making money the moment you close your laptop, you don't have a business. You have a job.\n\nIt's 3AM. Check your inbox right now.\n\nHow many leads are sitting unanswered? How many booking requests went cold while you slept?\n\nThe founders winning right now have N8N workflows qualifying leads, Claude AI drafting replies, and GoHighLevel booking calls overnight.\n\nThey wake up to revenue. You wake up to a backlog.\n\nThe difference isn't hustle. It's infrastructure.\n\nWhat's sitting in your inbox right now that should've been handled hours ago?\n\n#AIAutomation #BusinessAutomation #Entrepreneur #ClaudeAI",
   "chosen_idea": null,
-  "ideas": [],
+  "ideas": [
+    {
+      "number": 1,
+      "title": "The $10K Inbox Killer",
+      "concept": "A split-screen post showing a chaotic inbox on one side and a clean automated dashboard on the other. Alfie walks through how a Claude AI + Google Workspace integration replaced 20 hours of weekly admin for a client, with the actual N8N workflow shown as the visual centerpiece.",
+      "hook": "Your inbox is costing you $10K a month. You just can't see the invoice."
+    },
+    {
+      "number": 2,
+      "title": "Fire Yourself First",
+      "concept": "A bold text-on-screen reel where Alfie lists 5 tasks business owners should never touch again, paired with the exact automation stack to replace each one (GoHighLevel for follow-ups, Claude for content, N8N for the glue). Ends with a hard CTA to book a call.",
+      "hook": "If you're still doing these 5 things in your business, you're the bottleneck. Not the market."
+    },
+    {
+      "number": 3,
+      "title": "The 3AM Sales Machine",
+      "concept": "Case study post showing a real GoHighLevel + Claude AI setup that books leads, qualifies them, and sends contracts while the owner sleeps. Visual is a phone screen lighting up with notifications timestamped at 3:17 AM, 4:02 AM, 5:48 AM.",
+      "hook": "While you were sleeping, this system closed 3 deals. No team. No VAs. No excuses."
+    }
+  ],
   "ig_html": null,
   "fb_html": null,
   "ig_url": null,
   "fb_url": null,
   "wants_video": false,
-  "last_updated": "2026-06-21T22:47:33.270Z"
+  "last_updated": "2026-06-22T16:21:44.224Z"
 }
