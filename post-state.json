@@ -1,5 +1,5 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "repost_scheduled_at": null,
   "ig_caption": "Fire yourself first. 🔥\n\nIf you're still doing these 5 things, YOU are the bottleneck — not the market:\n\n1. Manually following up with leads → GoHighLevel does it 24/7\n2. Writing every caption from scratch → Claude drafts in seconds\n3. Copy-pasting data between tools → N8N is the glue\n4. Booking calls back-and-forth → Automated calendars\n5. Sending invoices by hand → Workflow triggers it for you\n\nYour business shouldn't depend on you being awake.\n\nSound familiar? Book a call — link in bio.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod #SmallBusinessTips #DigitalTransformation #AutomationTools #ScaleYourBusiness #LeadGeneration #SalesAutomation #ContentAutomation #BusinessGrowth #SoloPreneur #TechStack #ProductivityHacks #FutureOfWork #AIForBusiness",
@@ -8,21 +8,21 @@
   "ideas": [
     {
       "number": 1,
-      "title": "The $10K Inbox Killer",
-      "concept": "A split-screen post showing a chaotic inbox on one side and a clean automated dashboard on the other. Alfie walks through how a Claude AI + Google Workspace integration replaced 20 hours of weekly admin for a client, with the actual N8N workflow shown as the visual centerpiece.",
-      "hook": "Your inbox is costing you $10K a month. You just can't see the invoice."
+      "title": "The $10K Hire You Don't Need",
+      "concept": "A side-by-side comparison post showing the cost of hiring a full-time employee ($50K+/year) versus deploying a Claude AI + N8N automation stack that handles the same workload for a fraction of the price. Visual: split-screen graphic with a stressed business owner on one side reviewing payroll, and a clean automation dashboard humming away on the other.",
+      "hook": "You don't need another employee. You need an automation that doesn't call in sick."
     },
     {
       "number": 2,
-      "title": "Fire Yourself First",
-      "concept": "A bold text-on-screen reel where Alfie lists 5 tasks business owners should never touch again, paired with the exact automation stack to replace each one (GoHighLevel for follow-ups, Claude for content, N8N for the glue). Ends with a hard CTA to book a call.",
-      "hook": "If you're still doing these 5 things in your business, you're the bottleneck. Not the market."
+      "title": "Your CRM Is Lying to You",
+      "concept": "A carousel post exposing the hidden inefficiencies in most business owners' tech stacks, then showing how GoHighLevel + Google Workspace + N8N integrations close the leaks. Visual: a 'leaky bucket' diagram of lost leads, followed by a streamlined funnel with automation nodes lighting up in sequence.",
+      "hook": "If your CRM isn't talking to your inbox, your calendar, and your AI, you're bleeding money. Period."
     },
     {
       "number": 3,
-      "title": "The 3AM Sales Machine",
-      "concept": "Case study post showing a real GoHighLevel + Claude AI setup that books leads, qualifies them, and sends contracts while the owner sleeps. Visual is a phone screen lighting up with notifications timestamped at 3:17 AM, 4:02 AM, 5:48 AM.",
-      "hook": "While you were sleeping, this system closed 3 deals. No team. No VAs. No excuses."
+      "title": "I Automated My Monday. Here's What Happened.",
+      "concept": "A behind-the-scenes reel-style post from Alfie walking through a real client workflow: Claude drafting proposals, N8N routing leads, GoHighLevel booking calls, all before 9 AM. Visual: fast-paced screen recording with timestamps overlaid, ending with a calendar full of booked calls and zero manual input.",
+      "hook": "While you were checking emails, my system closed three deals. Want to know how?"
     }
   ],
   "ig_html": null,
@@ -30,5 +30,5 @@
   "ig_url": null,
   "fb_url": null,
   "wants_video": false,
-  "last_updated": "2026-06-22T20:46:18.733Z"
+  "last_updated": "2026-06-24T13:58:00.502Z"
 }
