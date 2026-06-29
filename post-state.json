@@ -1,5 +1,5 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "repost_scheduled_at": null,
   "ig_caption": "While you were checking emails, my system closed three deals. ☕\n\n6:00 AM — Claude drafts 12 personalized proposals.\n6:42 AM — N8N routes new leads by intent score.\n7:15 AM — GoHighLevel books qualified calls.\n8:00 AM — I'm still asleep.\n8:59 AM — Calendar: fully booked. Inbox: zero touches.\n\nThis isn't a flex. It's a system.\nBuilt once. Runs forever.\nNo VAs. No burnout. No Monday dread.\n\nStill running your business on willpower? Let the bots take Monday.\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod #SmallBusinessTips #DigitalTransformation #LeadGeneration #SalesAutomation #AITools #ProductivityHacks #FounderLife #MarketingAutomation #StartupLife #ScaleYourBusiness #NoCode #AutomationExpert #SystemsThinking #PassiveIncome #FutureOfWork",
@@ -8,21 +8,21 @@
   "ideas": [
     {
       "number": 1,
-      "title": "The $10K Hire You Don't Need",
-      "concept": "A side-by-side comparison post showing the cost of hiring a full-time employee ($50K+/year) versus deploying a Claude AI + N8N automation stack that handles the same workload for a fraction of the price. Visual: split-screen graphic with a stressed business owner on one side reviewing payroll, and a clean automation dashboard humming away on the other.",
-      "hook": "You don't need another employee. You need an automation that doesn't call in sick."
+      "title": "The 3AM Employee",
+      "concept": "A split-screen visual showing a business owner peacefully sleeping on one side, and a glowing dashboard on the other with Claude AI, N8N, and GoHighLevel actively processing leads, sending follow-ups, and updating CRMs. Text overlay highlights specific tasks being completed while they sleep. Ends with Alfie's signature CTA.",
+      "hook": "While you were sleeping, your business made 47 decisions without you. The question is: were they the right ones?"
     },
     {
       "number": 2,
-      "title": "Your CRM Is Lying to You",
-      "concept": "A carousel post exposing the hidden inefficiencies in most business owners' tech stacks, then showing how GoHighLevel + Google Workspace + N8N integrations close the leaks. Visual: a 'leaky bucket' diagram of lost leads, followed by a streamlined funnel with automation nodes lighting up in sequence.",
-      "hook": "If your CRM isn't talking to your inbox, your calendar, and your AI, you're bleeding money. Period."
+      "title": "The $80K Hire You Don't Need",
+      "concept": "A direct-to-camera video or carousel breaking down the true cost of hiring a full-time operations manager vs. building an AI automation stack with Claude, N8N, and Google Workspace. Show real numbers, real workflows, and the brutal math most agencies won't tell you.",
+      "hook": "Stop interviewing humans for jobs an AI can do better, faster, and for 1/20th the cost."
     },
     {
       "number": 3,
-      "title": "I Automated My Monday. Here's What Happened.",
-      "concept": "A behind-the-scenes reel-style post from Alfie walking through a real client workflow: Claude drafting proposals, N8N routing leads, GoHighLevel booking calls, all before 9 AM. Visual: fast-paced screen recording with timestamps overlaid, ending with a calendar full of booked calls and zero manual input.",
-      "hook": "While you were checking emails, my system closed three deals. Want to know how?"
+      "title": "I Automated My Entire Client Onboarding in 4 Hours",
+      "concept": "A behind-the-scenes breakdown showing Alfie building a complete client onboarding system using GoHighLevel for intake, N8N for workflow logic, Claude for personalised responses, and Google Workspace for document generation. Quick-cut visuals of nodes connecting, automations firing, and the final result: zero manual work.",
+      "hook": "Your onboarding process is leaking money. Here's the exact 4-hour build that fixed mine forever."
     }
   ],
   "ig_html": null,
@@ -30,5 +30,5 @@
   "ig_url": null,
   "fb_url": null,
   "wants_video": false,
-  "last_updated": "2026-06-29T13:55:29.928Z"
+  "last_updated": "2026-06-29T15:22:35.441Z"
 }
