@@ -65,11 +65,21 @@ function parseJSON(text, context) {
   }
 }
 
-async function generateIdeas() {
+async function generateIdeas(feedback = null, avoidTitles = []) {
+  const avoidClause = avoidTitles.length
+    ? `\nDO NOT repeat or closely resemble any of these previously suggested topics: ${avoidTitles.slice(-12).join(' | ')}`
+    : '';
+  const feedbackClause = feedback
+    ? `\nThe user gave this feedback on the previous ideas: "${feedback}". Use it to guide a different direction.`
+    : '';
+  const varietyInstruction = `
+Each idea must be a clearly DIFFERENT post format and topic — one could be a stat/data post, one a before/after, one a case study or story, one a myth-bust, one a tool breakdown, etc. Rotate formats so they never all look the same.`;
+
   const raw = await claude(`Generate 3 social media post ideas for Accelod, an AI automation consultancy run by Alfie O'Donnell.
 Target audience: business owners and entrepreneurs who want to automate.
 Brand voice: confident, direct, no fluff, slightly edgy.
 Tools featured: Claude AI, N8N, GoHighLevel, Google Workspace.
+${varietyInstruction}${avoidClause}${feedbackClause}
 
 Return ONLY valid JSON:
 {
@@ -200,7 +210,7 @@ async function handleSchedule() {
     return;
   }
   console.log('Generating ideas...');
-  const { ideas } = await generateIdeas();
+  const { ideas } = await generateIdeas(null, state.past_idea_titles || []);
 
   await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
     subject: `Accelod Post Options – ${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}`,
@@ -216,7 +226,8 @@ async function handleSchedule() {
     </div>`
   });
 
-  writeState({ status: 'awaiting_choice', ideas, version: 0 });
+  const pastTitles = [...(state.past_idea_titles || []), ...ideas.map(i => i.title)];
+  writeState({ status: 'awaiting_choice', ideas, version: 0, past_idea_titles: pastTitles });
   console.log('Ideas emailed successfully.');
 }
 
@@ -228,25 +239,41 @@ async function handleEmailReply(emailBody) {
     if (!Array.isArray(state.ideas)) throw new Error('State is missing ideas array');
     const choiceMatch = emailBody.match(/\b([123])\b/);
     const wantsVideo = /\bvideo\b/i.test(emailBody);
-    let parsed;
-    if (choiceMatch) {
-      console.log('Quick choice detected — skipping Claude parse');
-      parsed = { choice: parseInt(choiceMatch[1]), wantsVideo };
-    } else {
-      parsed = parseJSON(
-        await claude(`User received 3 post ideas and replied: "${emailBody}"
-Ideas: ${state.ideas.map(i => `${i.number}. ${i.title}`).join(', ')}
-Which did they pick? Did they mention video?
-Return ONLY JSON: { "choice": 1|2|3, "wantsVideo": true|false }`, 512),
-        'choice parse'
-      );
+
+    if (!choiceMatch) {
+      // No number picked — treat reply as feedback, regenerate ideas
+      console.log('No choice number — regenerating ideas with feedback:', emailBody.slice(0, 80));
+      const allPastTitles = [...(state.past_idea_titles || []), ...state.ideas.map(i => i.title)];
+      const { ideas: newIdeas } = await generateIdeas(emailBody, allPastTitles);
+      const newPastTitles = [...allPastTitles, ...newIdeas.map(i => i.title)];
+
+      await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+        subject: `Re: Accelod Post Options – 3 fresh ideas`,
+        htmlBody: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+          <h2 style="color:#0B1929">Here are 3 new ideas:</h2>
+          <p style="color:#666;margin-bottom:20px"><em>Refreshed based on your feedback.</em></p>
+          ${newIdeas.map(i => `
+            <div style="margin-bottom:20px;padding:20px;border:2px solid #00D4FF;border-radius:12px;background:#f8f9fa">
+              <h3 style="margin:0 0 8px;color:#0B1929">${i.number}. ${i.title}</h3>
+              <p style="margin:0 0 8px;color:#444">${i.concept}</p>
+              <p style="margin:0;font-style:italic;color:#0088C8"><strong>Hook:</strong> "${i.hook}"</p>
+            </div>`).join('')}
+          <p style="margin-top:24px">Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> — or give more feedback for another round.</p>
+        </div>`
+      });
+
+      writeState({ ...state, ideas: newIdeas, past_idea_titles: newPastTitles });
+      console.log('Fresh ideas emailed.');
+      return;
     }
+
+    const parsed = { choice: parseInt(choiceMatch[1]), wantsVideo };
     const chosen = state.ideas.find(i => i.number === parsed.choice);
     if (!chosen) {
       await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
         subject: 'Re: Accelod Post Options – Which one?',
         htmlBody: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
-          <p>Couldn't work out which idea you meant. Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> to pick one.</p>
+          <p>Couldn't match that to an idea. Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong>.</p>
           ${state.ideas.map(i => `<p><strong>${i.number}.</strong> ${i.title}</p>`).join('')}
         </div>`
       });
