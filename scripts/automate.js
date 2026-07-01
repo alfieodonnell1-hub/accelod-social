@@ -55,6 +55,13 @@ function stripHtml(text) {
   return text.replace(/^```(?:html)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
 }
 
+function getUKTzInfo() {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', timeZoneName: 'short' }).formatToParts(new Date());
+  const tzName = parts.find(p => p.type === 'timeZoneName')?.value || 'GMT';
+  const offsetHours = tzName === 'BST' ? 1 : 0;
+  return { tzName, offsetHours, label: `${tzName} (UTC+${offsetHours})` };
+}
+
 function parseJSON(text, context) {
   try {
     const match = text.match(/\{[\s\S]*\}/);
@@ -310,11 +317,14 @@ Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 
       console.log('Quick approval detected — skipping Claude intent parse');
       intent = { intent: 'approve', amendments: null, scheduledAt: null, postNow: quickPostNow };
     } else {
+      const { label: ukTzLabel } = getUKTzInfo();
       intent = parseJSON(
-        await claude(`Today is ${new Date().toISOString().split('T')[0]}. User reviewed their social post preview and replied: "${emailBody}"
+        await claude(`Today is ${new Date().toISOString().split('T')[0]}. Current UTC time: ${new Date().toISOString()}.
+The user is in the UK, currently on ${ukTzLabel}. All times they mention are UK local time — convert to UTC when outputting scheduledAt.
+User reviewed their social post preview and replied: "${emailBody}"
 Are they approving to post, requesting changes, or approving with a specific schedule or immediate publish?
 - "post now" / "post immediately" / "go live now" → postNow: true
-- Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 9am") → extract UTC ISO 8601 datetime into scheduledAt
+- Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 1pm") → convert from UK local to UTC ISO 8601 and put in scheduledAt
 - Plain approval ("post it", "looks good") → queue as normal
 Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`, 512),
         'intent parse'
