@@ -1,9 +1,28 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "repost_scheduled_at": null,
   "chosen_idea": null,
-  "ideas": null,
+  "ideas": [
+    {
+      "number": 1,
+      "title": "The 87% Automation Lie",
+      "concept": "A data-driven post exposing the real stats behind failed automation attempts. Visual would be a bold stat card showing '87% of business owners try to automate with the wrong tool first' followed by a breakdown of which tools actually fit which jobs (Claude for thinking, N8N for connecting, GoHighLevel for closing). Ends with a direct challenge to audit their current stack.",
+      "hook": "87% of business owners are automating the wrong thing first — and it's costing them six figures a year."
+    },
+    {
+      "number": 2,
+      "title": "Myth: AI Will Replace Your Team",
+      "concept": "A myth-bust carousel post tackling the biggest fear entrepreneurs have about automation. Visual would be a split-screen 'MYTH vs REALITY' format, walking through 4 common misconceptions (AI replaces people, it's too expensive, it's too complex, it's only for tech companies) and dismantling each with a punchy one-liner truth. Positions Accelod as the antidote to the hype.",
+      "hook": "AI isn't replacing your team. Bad systems are."
+    },
+    {
+      "number": 3,
+      "title": "Anatomy of a $0 Lead Follow-Up Machine",
+      "concept": "A tool breakdown post showing exactly how Claude + N8N + GoHighLevel + Google Workspace stack together to run lead follow-up on autopilot. Visual would be a clean flowchart diagram: lead comes in → N8N triggers → Claude writes personalised reply → GoHighLevel schedules follow-up → Google Sheets logs it. Shows the actual architecture instead of vague promises.",
+      "hook": "Here's the exact 4-tool stack replacing entire sales admin teams — mapped out in one diagram."
+    }
+  ],
   "wants_video": false,
   "ig_caption": null,
   "fb_caption": null,
@@ -15,7 +34,10 @@
     "Fire Yourself First",
     "I Automated My Entire Client Onboarding in 4 Hours",
     "The $10K Inbox Killer",
-    "The 3AM Sales Machine"
+    "The 3AM Sales Machine",
+    "The 87% Automation Lie",
+    "Myth: AI Will Replace Your Team",
+    "Anatomy of a $0 Lead Follow-Up Machine"
   ],
-  "last_updated": "2026-07-01T00:00:00.000Z"
+  "last_updated": "2026-07-02T13:23:32.593Z"
 }
