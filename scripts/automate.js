@@ -210,6 +210,29 @@ async function handleResendPreview() {
   console.log('Preview email resent for v' + state.version);
 }
 
+async function handleResendIdeas() {
+  const state = readState();
+  if (state.status !== 'awaiting_choice' || !Array.isArray(state.ideas)) {
+    console.log('No pending ideas to resend.');
+    return;
+  }
+  console.log('Resending ideas email...');
+  await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+    subject: `Accelod Post Options – ${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })} (resent)`,
+    htmlBody: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+      <h2 style="color:#0B1929">Your Accelod post ideas (resent):</h2>
+      ${state.ideas.map(i => `
+        <div style="margin-bottom:20px;padding:20px;border:2px solid #00D4FF;border-radius:12px;background:#f8f9fa">
+          <h3 style="margin:0 0 8px;color:#0B1929">${i.number}. ${i.title}</h3>
+          <p style="margin:0 0 8px;color:#444">${i.concept}</p>
+          <p style="margin:0;font-style:italic;color:#0088C8"><strong>Hook:</strong> "${i.hook}"</p>
+        </div>`).join('')}
+      <p style="margin-top:24px">Reply with <strong>1</strong>, <strong>2</strong>, or <strong>3</strong> — or give feedback for a fresh set.</p>
+    </div>`
+  });
+  console.log('Ideas email resent.');
+}
+
 async function handleSchedule() {
   const state = readState();
   if (state.status !== 'idle') {
@@ -379,6 +402,8 @@ async function main() {
       await handleRepost();
     } else if (state.status === 'awaiting_approval') {
       await handleResendPreview();
+    } else if (state.status === 'awaiting_choice') {
+      await handleResendIdeas();
     } else {
       await handleSchedule();
     }
