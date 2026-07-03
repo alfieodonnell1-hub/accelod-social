@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.0",
+    "@higgsfield/client": "^0.3.0",
     "puppeteer": "^22.0.0"
   }
 }

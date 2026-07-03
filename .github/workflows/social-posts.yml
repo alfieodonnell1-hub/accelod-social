@@ -14,6 +14,7 @@ concurrency:
 jobs:
   automate:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: write
 
@@ -41,6 +42,7 @@ jobs:
           N8N_VIDEO_WEBHOOK: ${{ secrets.N8N_VIDEO_WEBHOOK }}
           N8N_EMAIL_WEBHOOK: ${{ secrets.N8N_EMAIL_WEBHOOK }}
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          HIGGSFIELD_API_KEY: ${{ secrets.HIGGSFIELD_API_KEY }}
           EVENT_TYPE: ${{ github.event_name }}
           EMAIL_BODY: ${{ toJson(github.event.client_payload.email_body) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -197,6 +197,90 @@ async function handleRepost() {
   console.log('Repost scheduled successfully.');
 }
 
+async function generateVideoPrompt(concept) {
+  return (await claude(`Write a Higgsfield image-to-video motion prompt for this social media post graphic.
+The graphic is a static dark-background business post that should be brought to life with subtle, premium motion.
+Post concept: ${concept.title} — ${concept.concept}
+
+Rules: subtle is better than dramatic. Think slow particle drift, gentle cyan glow pulses on accent elements,
+slight camera zoom or parallax on the background texture, text elements with a soft shimmer.
+Keep it cinematic and professional — this is a B2B brand, not a consumer app.
+Under 60 words. Return ONLY the motion prompt.`, 200)).trim();
+}
+
+async function generateVideo(imageUrl, motionPrompt) {
+  const [keyId, keySecret] = (process.env.HIGGSFIELD_API_KEY || '').split(':');
+  if (!keyId || !keySecret) throw new Error('HIGGSFIELD_API_KEY must be in KEY_ID:KEY_SECRET format');
+
+  const authHeader = `${keyId}:${keySecret}`;
+  const BASE = 'https://platform.higgsfield.ai';
+
+  console.log('Submitting video to Higgsfield:', motionPrompt.slice(0, 60));
+  const submitRes = await fetch(`${BASE}/v1/image2video/dop`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${authHeader}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'dop-turbo',
+      prompt: motionPrompt,
+      input_images: [{ type: 'image_url', image_url: imageUrl }]
+    })
+  });
+  const job = await submitRes.json();
+  console.log('Higgsfield submit response:', JSON.stringify(job).slice(0, 200));
+  if (!job.request_id && !job.id) throw new Error('Higgsfield submit failed: ' + JSON.stringify(job));
+
+  const requestId = job.request_id || job.id;
+  const statusUrl = job.status_url || `${BASE}/requests/${requestId}/status`;
+
+  // Poll every 30s for up to 15 minutes
+  for (let i = 1; i <= 30; i++) {
+    await new Promise(r => setTimeout(r, 30000));
+    const statusRes = await fetch(statusUrl, { headers: { 'Authorization': `Bearer ${authHeader}` } });
+    const status = await statusRes.json();
+    console.log(`Video status [${i}/30]: ${status.status}`);
+    if (status.status === 'completed') {
+      const url = status.video?.url || status.jobs?.[0]?.results?.raw?.url;
+      if (!url) throw new Error('Completed but no video URL in response: ' + JSON.stringify(status));
+      return url;
+    }
+    if (status.status === 'failed') throw new Error('Higgsfield generation failed');
+    if (status.status === 'nsfw') throw new Error('Higgsfield rejected content as NSFW');
+  }
+  throw new Error('Video generation timed out after 15 minutes');
+}
+
+async function handleVideoGeneration() {
+  const state = readState();
+  if (!state.wants_video || !state.ig_url || !state.chosen_idea) {
+    console.log('No video requested or missing state — skipping video generation.');
+    return;
+  }
+  console.log('Starting video generation for:', state.chosen_idea.title);
+  writeState({ status: 'generating_video' });
+
+  const motionPrompt = await generateVideoPrompt(state.chosen_idea);
+  console.log('Motion prompt:', motionPrompt);
+
+  const videoUrl = await generateVideo(state.ig_url, motionPrompt);
+  console.log('Video ready:', videoUrl);
+
+  writeState({ status: 'awaiting_video_approval', video_url: videoUrl });
+
+  await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+    subject: `Re: Accelod Post – Your video is ready 🎬`,
+    htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
+      <h2 style="color:#0B1929">Your video is ready</h2>
+      <p><strong>${state.chosen_idea.title}</strong></p>
+      <p style="margin:16px 0">
+        <a href="${videoUrl}" style="display:inline-block;padding:14px 28px;background:#0B1929;color:#00D4FF;border:2px solid #00D4FF;border-radius:8px;text-decoration:none;font-weight:700">▶ Watch Video</a>
+      </p>
+      <p style="color:#444">Reply <strong>"post video"</strong> to publish it to Instagram and Facebook.</p>
+      <p style="color:#444">Reply <strong>"skip video"</strong> to leave it for now.</p>
+    </div>`
+  });
+  console.log('Video approval email sent.');
+}
+
 async function handleResendPreview() {
   const state = readState();
   if (state.status !== 'awaiting_approval') { console.log('No preview to resend — state is', state.status); return; }
@@ -355,8 +439,12 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
     }
     if (intent.intent === 'approve') {
       await callN8n(process.env.N8N_IMAGE_WEBHOOK, { igImageUrl: state.ig_url, fbImageUrl: state.fb_url, igCaption: state.ig_caption, fbCaption: state.fb_caption, scheduledAt: intent.scheduledAt || null, postNow: intent.postNow || false });
-      writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
-      console.log('Approved — posted to Buffer via N8N.');
+      console.log('Image approved — posted to Buffer via N8N.');
+      if (state.wants_video) {
+        await handleVideoGeneration();
+      } else {
+        writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
+      }
     } else {
       if (state.version >= 5) {
         await callN8n(process.env.N8N_EMAIL_WEBHOOK, { subject: 'Re: Accelod Post – Revision limit reached', htmlBody: '<p>5 revisions reached. Reply <strong>“post it”</strong> to publish or <strong>“start over”</strong> to reset.</p>' });
@@ -377,6 +465,31 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
       await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments, igPath, fbPath);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
+    }
+  } else if (state.status === 'awaiting_video_approval') {
+    const lower = emailBody.toLowerCase();
+    const skipVideo = /\bskip\b/.test(lower);
+    const postVideo = /\bpost\s+video\b|\bpost\s+it\b|\byes\b|\bgo\b|\bsend\s+it\b/.test(lower);
+
+    if (skipVideo) {
+      writeState({ status: 'idle', wants_video: false, video_url: null });
+      console.log('Video skipped — state reset to idle.');
+    } else if (postVideo) {
+      await callN8n(process.env.N8N_VIDEO_WEBHOOK, {
+        videoUrl: state.video_url,
+        igCaption: state.ig_caption,
+        fbCaption: state.fb_caption
+      });
+      writeState({ status: 'idle', wants_video: false, video_url: null });
+      console.log('Video approved — sent to N8N video webhook.');
+    } else {
+      await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+        subject: `Re: Accelod Post – Post your video?`,
+        htmlBody: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
+          <p>Reply <strong>"post video"</strong> to publish, or <strong>"skip video"</strong> to leave it.</p>
+          <p><a href="${state.video_url}">Watch video again</a></p>
+        </div>`
+      });
     }
   } else {
     console.log('No active post session — reply ignored.');
