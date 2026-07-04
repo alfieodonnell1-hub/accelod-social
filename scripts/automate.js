@@ -249,32 +249,55 @@ async function generateVideo(imageUrl, motionPrompt) {
   throw new Error('Video generation timed out after 15 minutes');
 }
 
-async function handleVideoGeneration() {
+async function handleVideoPrepare() {
+  // Step 1: Generate prompt and send for review BEFORE spending Higgsfield credits
   const state = readState();
   if (!state.wants_video || !state.ig_url || !state.chosen_idea) {
-    console.log('No video requested or missing state — skipping video generation.');
+    console.log('No video requested or missing state — skipping.');
     return;
   }
-  console.log('Starting video generation for:', state.chosen_idea.title);
-  writeState({ status: 'generating_video' });
-
+  console.log('Generating motion prompt for review...');
   const motionPrompt = await generateVideoPrompt(state.chosen_idea);
   console.log('Motion prompt:', motionPrompt);
+
+  writeState({ status: 'awaiting_video_prompt_approval', motion_prompt: motionPrompt, ig_html: null, fb_html: null });
+
+  await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+    subject: `Re: Accelod Post – Review your video prompt before we generate`,
+    htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
+      <h2 style="color:#0B1929">Review before we spend credits</h2>
+      <p style="color:#444">Here's the motion prompt I'll send to Higgsfield for <strong>${state.chosen_idea.title}</strong>:</p>
+      <div style="background:#f4f4f4;border-left:4px solid #00D4FF;padding:16px 20px;margin:20px 0;border-radius:4px;font-style:italic;color:#222">
+        ${motionPrompt}
+      </div>
+      <p style="color:#444">Reply <strong>"submit"</strong> to generate the video with this prompt.</p>
+      <p style="color:#444">Or paste your own version and I'll use that instead.</p>
+      <p style="color:#444">Reply <strong>"skip video"</strong> to cancel.</p>
+    </div>`
+  });
+  console.log('Prompt review email sent.');
+}
+
+async function handleVideoSubmit(motionPrompt) {
+  // Step 2: Actually call Higgsfield — only runs after prompt is approved
+  const state = readState();
+  console.log('Submitting to Higgsfield with prompt:', motionPrompt.slice(0, 80));
+  writeState({ status: 'generating_video', motion_prompt: motionPrompt });
 
   const videoUrl = await generateVideo(state.ig_url, motionPrompt);
   console.log('Video ready:', videoUrl);
 
-  writeState({ status: 'awaiting_video_approval', video_url: videoUrl });
+  writeState({ status: 'awaiting_video_approval', video_url: videoUrl, motion_prompt: null });
 
   await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
-    subject: `Re: Accelod Post – Your video is ready 🎬`,
+    subject: `Re: Accelod Post – Your video is ready`,
     htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
       <h2 style="color:#0B1929">Your video is ready</h2>
-      <p><strong>${state.chosen_idea.title}</strong></p>
+      <p><strong>${state.chosen_idea?.title || ''}</strong></p>
       <p style="margin:16px 0">
         <a href="${videoUrl}" style="display:inline-block;padding:14px 28px;background:#0B1929;color:#00D4FF;border:2px solid #00D4FF;border-radius:8px;text-decoration:none;font-weight:700">▶ Watch Video</a>
       </p>
-      <p style="color:#444">Reply <strong>"post video"</strong> to publish it to Instagram and Facebook.</p>
+      <p style="color:#444">Reply <strong>"post video"</strong> to publish to Instagram and Facebook.</p>
       <p style="color:#444">Reply <strong>"skip video"</strong> to leave it for now.</p>
     </div>`
   });
@@ -441,7 +464,7 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       await callN8n(process.env.N8N_IMAGE_WEBHOOK, { igImageUrl: state.ig_url, fbImageUrl: state.fb_url, igCaption: state.ig_caption, fbCaption: state.fb_caption, scheduledAt: intent.scheduledAt || null, postNow: intent.postNow || false });
       console.log('Image approved — posted to Buffer via N8N.');
       if (state.wants_video) {
-        await handleVideoGeneration();
+        await handleVideoPrepare();
       } else {
         writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
       }
@@ -466,6 +489,18 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments, igPath, fbPath);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
     }
+  } else if (state.status === 'awaiting_video_prompt_approval') {
+    const lower = emailBody.toLowerCase().trim();
+    if (/\bskip\b/.test(lower)) {
+      writeState({ status: 'idle', wants_video: false, motion_prompt: null });
+      console.log('Video skipped at prompt stage.');
+    } else {
+      const isApproval = /^(submit|looks?\s+good|use\s+it|approve[d]?|yes|go(\s+ahead)?|send\s+it|ok(ay)?)[\s!.]*$/.test(lower);
+      const motionPrompt = isApproval ? state.motion_prompt : emailBody.trim();
+      console.log(isApproval ? 'Prompt approved — submitting to Higgsfield' : 'Using custom prompt:', motionPrompt?.slice(0, 80));
+      await handleVideoSubmit(motionPrompt);
+    }
+
   } else if (state.status === 'awaiting_video_approval') {
     const lower = emailBody.toLowerCase();
     const skipVideo = /\bskip\b/.test(lower);
@@ -517,6 +552,18 @@ async function main() {
       await handleResendPreview();
     } else if (state.status === 'awaiting_choice') {
       await handleResendIdeas();
+    } else if (state.status === 'generating_video') {
+      // Previous job crashed mid-poll — revert to prompt approval so user can retry
+      console.log('Stuck generating_video state detected — reverting to prompt review step');
+      writeState({ status: 'awaiting_video_prompt_approval' });
+      await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+        subject: `Re: Accelod Post – Video generation failed, retry?`,
+        htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
+          <p>The video generation timed out or failed. Your motion prompt was:</p>
+          <div style="background:#f4f4f4;border-left:4px solid #00D4FF;padding:16px 20px;margin:16px 0;border-radius:4px;font-style:italic">${state.motion_prompt || '(not saved)'}</div>
+          <p>Reply <strong>"submit"</strong> to retry, paste a new prompt, or <strong>"skip video"</strong> to cancel.</p>
+        </div>`
+      });
     } else {
       await handleSchedule();
     }
