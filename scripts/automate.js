@@ -106,23 +106,38 @@ async function generatePostHTML(concept, platform) {
 CONCEPT: ${concept.title} — ${concept.concept}
 HOOK: ${concept.hook}
 PLATFORM: ${platform} — canvas exactly ${isIg ? '1080px x 1350px' : '1200px x 630px'}, element id="post"
-LAYOUT: ${isIg
-  ? 'Vertical stack: badge > headline > subtitle > content panel > CTA pill + logo'
-  : 'Left column (360px): badge + headline + subtitle + CTA pill + logo | Right panel (flex:1): dark content panel (#06101A) filled with 3-5 concrete stats, bullet points, or before/after items pulled directly from the concept — this panel must NEVER be empty'}
 
-BRAND RULES (follow exactly):
+LAYOUT: ${isIg
+  ? `Instagram vertical (1080×1350). Think mobile-first — someone scrolling on a phone should read the key value in under 2 seconds.
+     Structure: badge → BIG bold headline → short punchy subtitle → content panel → CTA pill + logo.
+     The content panel must use VARIED visual elements — not just bullet points. Use a mix of: large stat callouts (e.g. "27 → 4" in huge type), icon rows (use emoji or simple inline SVG shapes as icons), before/after comparisons, numbered steps with accent colours, bold contrast highlights. Make it feel designed, not generated.`
+  : `Facebook landscape (1200×630). Left column (360px): badge + headline + subtitle + CTA + logo. Right panel (flex:1): dark content panel (#06101A) — MUST be visually rich with 3-5 items using icons, stats, or comparison rows. Never just plain text. Panel must NEVER be empty.`}
+
+BRAND RULES (non-negotiable):
 - Background: #0B1929. Accents: #00D4FF and #33E1FF
 - Google Fonts CDN: Outfit 900/700/400, DM Sans 500/400, JetBrains Mono 500/400
-- Claude 12-spoke asterisk SVG <symbol id="claude-star"> used as: bg watermark top-right (opacity 0.05, rotate 12deg) AND badge icon
-- Badge: inline-flex, cyan border pill, "AI Automation" text + asterisk icon
-- Headline: Outfit 900, white with key word in cyan gradient (em tag + webkit-background-clip)
-- CTA pill: soft engagement question e.g. "Sound familiar?" or "Doing this manually?" — NEVER a sales line
-- Accelod logo: bottom right, gradient #00D4FF to #33E1FF, opacity 1, clearly visible
-- Body text min 20px. Key values min 26px bold. Headline: ${isIg ? '82px' : '58px'}+
-- Content panel: bg #06101A, 1px solid rgba(0,212,255,0.2), border-radius 16px
-- Dot-grid radial texture bg + top-left radial glow element
-- Include export PNG button + dom-to-image-more@3.3.0 CDN script
+- Claude 12-spoke asterisk SVG <symbol id="claude-star"> — bg watermark top-right (opacity 0.05, rotate 12deg) AND badge icon
+- Badge: inline-flex cyan border pill, "AI Automation" label + asterisk icon
+- Headline: Outfit 900, white, one key word wrapped in <em> with cyan gradient (-webkit-background-clip:text)
+- CTA pill: conversational engagement hook e.g. "Sound familiar?" "Doing this manually?" — NEVER a sales line
+- Accelod logo: bottom right, gradient #00D4FF→#33E1FF, clearly visible
+- Content panel: bg #06101A, border 1px solid rgba(0,212,255,0.2), border-radius 16px
+- Dot-grid radial texture + top-left radial glow
 
+TYPOGRAPHY — MOBILE FIRST (critical):
+- Headline: ${isIg ? 'min 96px' : 'min 62px'}, Outfit 900, tight letter-spacing (-0.03em)
+- Body / panel text: min 22px — nothing smaller, ever
+- Key stats / callout numbers: min 48px bold, cyan gradient
+- Labels / mono tags: min 18px JetBrains Mono
+
+VISUAL CREATIVITY (required):
+- Use large accent numbers, percentage callouts, or stat blocks as visual anchors
+- Use emoji OR simple inline SVG icons (circles, arrows, checkmarks built from SVG paths) as row icons — not just text
+- Vary the rhythm: mix full-width stat rows with smaller label rows, use colour fills on alternate rows
+- At least one element should be a large typographic number or bold stat that is instantly readable at thumbnail size
+- No wall-of-text content panels — every item needs a visual accent (icon, number, colour stripe, or highlight box)
+
+Include export PNG button + dom-to-image-more@3.3.0 CDN script.
 Return ONLY the complete HTML file — no markdown, no code fences, no explanation.`, 16384);
   return stripHtml(raw);
 }
