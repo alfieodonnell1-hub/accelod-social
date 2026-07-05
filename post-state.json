@@ -1,26 +1,26 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "repost_scheduled_at": null,
   "chosen_idea": null,
   "ideas": [
     {
       "number": 1,
-      "title": "The 87% Automation Lie",
-      "concept": "A data-driven post exposing the real stats behind failed automation attempts. Visual would be a bold stat card showing '87% of business owners try to automate with the wrong tool first' followed by a breakdown of which tools actually fit which jobs (Claude for thinking, N8N for connecting, GoHighLevel for closing). Ends with a direct challenge to audit their current stack.",
-      "hook": "87% of business owners are automating the wrong thing first — and it's costing them six figures a year."
+      "title": "The 4-Tool Stack Running My Entire Business",
+      "concept": "A tool breakdown post showing exactly how Claude AI, N8N, GoHighLevel, and Google Workspace connect to run 90% of daily operations. Visual would be a simple flow diagram with each tool's role labeled (Claude = brain, N8N = nervous system, GHL = mouth, Google = memory). Ends with a direct challenge to audit their own stack.",
+      "hook": "Most business owners use 27 tools. I use 4. Here's why mine outperform yours."
     },
     {
       "number": 2,
-      "title": "Myth: AI Will Replace Your Team",
-      "concept": "A myth-bust carousel post tackling the biggest fear entrepreneurs have about automation. Visual would be a split-screen 'MYTH vs REALITY' format, walking through 4 common misconceptions (AI replaces people, it's too expensive, it's too complex, it's only for tech companies) and dismantling each with a punchy one-liner truth. Positions Accelod as the antidote to the hype.",
-      "hook": "AI isn't replacing your team. Bad systems are."
+      "title": "Wednesday 2:47pm",
+      "concept": "A story-format case study following one real client Wednesday afternoon: a lead comes in, gets qualified by Claude, booked via GHL, briefed to the owner in Google Docs, all before they finish their coffee. Visual is a timestamped timeline showing each automated step happening while the owner does nothing. Highlights how time — not tools — is the real ROI.",
+      "hook": "At 2:47pm on a Wednesday, a $12K deal moved through my client's business. He was at the gym."
     },
     {
       "number": 3,
-      "title": "Anatomy of a $0 Lead Follow-Up Machine",
-      "concept": "A tool breakdown post showing exactly how Claude + N8N + GoHighLevel + Google Workspace stack together to run lead follow-up on autopilot. Visual would be a clean flowchart diagram: lead comes in → N8N triggers → Claude writes personalised reply → GoHighLevel schedules follow-up → Google Sheets logs it. Shows the actual architecture instead of vague promises.",
-      "hook": "Here's the exact 4-tool stack replacing entire sales admin teams — mapped out in one diagram."
+      "title": "Stop Hiring. Start Wiring.",
+      "concept": "A myth-bust post attacking the reflex to hire a VA or junior every time a bottleneck appears. Breaks down the true 12-month cost of a hire vs. a properly built N8N + Claude workflow doing the same job. Visual is a split comparison: 'Human Hire: £28K/year, sick days, training, mistakes' vs 'Automation: £2K setup, runs 24/7, never quits'.",
+      "hook": "Your next hire is a mistake. And I can prove it with a calculator."
     }
   ],
   "wants_video": false,
@@ -37,7 +37,10 @@
     "The 3AM Sales Machine",
     "The 87% Automation Lie",
     "Myth: AI Will Replace Your Team",
-    "Anatomy of a $0 Lead Follow-Up Machine"
+    "Anatomy of a $0 Lead Follow-Up Machine",
+    "The 4-Tool Stack Running My Entire Business",
+    "Wednesday 2:47pm",
+    "Stop Hiring. Start Wiring."
   ],
-  "last_updated": "2026-07-05T00:13:14.293Z"
+  "last_updated": "2026-07-05T13:00:07.624Z"
 }
