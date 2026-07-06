@@ -233,16 +233,17 @@ Under 60 words. Return ONLY the motion prompt.`, 200)).trim();
 }
 
 async function generateVideo(imageUrl, motionPrompt) {
-  const [keyId, keySecret] = (process.env.HIGGSFIELD_API_KEY || '').split(':');
-  if (!keyId || !keySecret) throw new Error('HIGGSFIELD_API_KEY must be in KEY_ID:KEY_SECRET format');
+  const apiKey = process.env.HIGGSFIELD_API_KEY || '';
+  if (!apiKey) throw new Error('HIGGSFIELD_API_KEY secret is not set');
 
-  const authHeader = `${keyId}:${keySecret}`;
+  // Try Basic auth (base64 KEY_ID:KEY_SECRET) — Higgsfield REST API standard
+  const basicAuth = 'Basic ' + Buffer.from(apiKey).toString('base64');
   const BASE = 'https://platform.higgsfield.ai';
 
   console.log('Submitting video to Higgsfield:', motionPrompt.slice(0, 60));
   const submitRes = await fetch(`${BASE}/v1/image2video/dop`, {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${authHeader}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': basicAuth, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'dop-turbo',
       prompt: motionPrompt,
@@ -259,7 +260,7 @@ async function generateVideo(imageUrl, motionPrompt) {
   // Poll every 30s for up to 15 minutes
   for (let i = 1; i <= 30; i++) {
     await new Promise(r => setTimeout(r, 30000));
-    const statusRes = await fetch(statusUrl, { headers: { 'Authorization': `Bearer ${authHeader}` } });
+    const statusRes = await fetch(statusUrl, { headers: { 'Authorization': basicAuth } });
     const status = await statusRes.json();
     console.log(`Video status [${i}/30]: ${status.status}`);
     if (status.status === 'completed') {
