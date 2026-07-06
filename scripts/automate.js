@@ -493,10 +493,6 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
         writeState({ status: 'idle', chosen_idea: null, ig_url: null, fb_url: null, ig_html: null, fb_html: null, version: 0 });
       }
     } else {
-      if (state.version >= 5) {
-        await callN8n(process.env.N8N_EMAIL_WEBHOOK, { subject: 'Re: Accelod Post – Revision limit reached', htmlBody: '<p>5 revisions reached. Reply <strong>“post it”</strong> to publish or <strong>“start over”</strong> to reset.</p>' });
-        return;
-      }
       if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot apply amendments');
       console.log('Applying amendments:', intent.amendments);
       const [updIgRaw, updFbRaw] = await Promise.all([
