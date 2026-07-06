@@ -113,6 +113,14 @@ LAYOUT: ${isIg
      The content panel must use VARIED visual elements — not just bullet points. Use a mix of: large stat callouts (e.g. "27 → 4" in huge type), icon rows (use emoji or simple inline SVG shapes as icons), before/after comparisons, numbered steps with accent colours, bold contrast highlights. Make it feel designed, not generated.`
   : `Facebook landscape (1200×630). Left column (360px): badge + headline + subtitle + CTA + logo. Right panel (flex:1): dark content panel (#06101A) — MUST be visually rich with 3-5 items using icons, stats, or comparison rows. Never just plain text. Panel must NEVER be empty.`}
 
+TOOL LOGOS — whenever these tools appear in the post content, use an <img> tag with these exact URLs (32–40px square, object-fit:contain):
+- Claude AI / Anthropic: https://cdn.simpleicons.org/anthropic/00D4FF
+- N8N: https://cdn.simpleicons.org/n8n/EA4B71
+- Google Workspace / Google: https://cdn.simpleicons.org/google
+- GoHighLevel: no CDN icon — render as a small pill badge with text "GHL" in #FFD700 on dark bg
+- If any other named tool appears, check cdn.simpleicons.org/{toolname} and use it
+Place logos inline next to tool names in rows/lists. Never use emoji as a logo substitute when a real logo URL is available.
+
 BRAND RULES (non-negotiable):
 - Background: #0B1929. Accents: #00D4FF and #33E1FF
 - Google Fonts CDN: Outfit 900/700/400, DM Sans 500/400, JetBrains Mono 500/400
