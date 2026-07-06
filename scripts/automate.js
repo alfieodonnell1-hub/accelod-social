@@ -117,7 +117,8 @@ TOOL LOGOS — whenever these tools appear in the post content, use an <img> tag
 - Claude AI / Anthropic: https://cdn.simpleicons.org/anthropic/00D4FF
 - N8N: https://cdn.simpleicons.org/n8n/EA4B71
 - Google Workspace / Google: https://cdn.simpleicons.org/google
-- GoHighLevel: no CDN icon — render as a small pill badge with text "GHL" in #FFD700 on dark bg
+- GoHighLevel: use this inline SVG directly (copy verbatim into the HTML, use wherever GHL appears):
+  <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#112240"/><path d="M20,72 L20,52 L14,52 L26,28 L38,52 L32,52 L32,72 Z" fill="#F59E0B"/><path d="M50,76 L50,50 L43,50 L55,22 L67,50 L60,50 L60,76 Z" fill="#3B82F6"/><path d="M72,72 L72,52 L66,52 L78,28 L90,52 L84,52 L84,72 Z" fill="#22C55E"/></svg>
 - If any other named tool appears, check cdn.simpleicons.org/{toolname} and use it
 Place logos inline next to tool names in rows/lists. Never use emoji as a logo substitute when a real logo URL is available.
 
