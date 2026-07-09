@@ -1,40 +1,6 @@
 {
-  "status": "awaiting_video_prompt_approval",
-  "version": 6,
-  "repost_scheduled_at": null,
-  "chosen_idea": {
-    "number": 1,
-    "title": "The 4-Tool Stack Running My Entire Business",
-    "concept": "A tool breakdown post showing exactly how Claude AI, N8N, GoHighLevel, and Google Workspace connect to run 90% of daily operations. Visual would be a simple flow diagram with each tool's role labeled (Claude = brain, N8N = nervous system, GHL = mouth, Google = memory). Ends with a direct challenge to audit their own stack.",
-    "hook": "Most business owners use 27 tools. I use 4. Here's why mine outperform yours."
-  },
-  "ideas": [
-    {
-      "number": 1,
-      "title": "The 4-Tool Stack Running My Entire Business",
-      "concept": "A tool breakdown post showing exactly how Claude AI, N8N, GoHighLevel, and Google Workspace connect to run 90% of daily operations. Visual would be a simple flow diagram with each tool's role labeled (Claude = brain, N8N = nervous system, GHL = mouth, Google = memory). Ends with a direct challenge to audit their own stack.",
-      "hook": "Most business owners use 27 tools. I use 4. Here's why mine outperform yours."
-    },
-    {
-      "number": 2,
-      "title": "Wednesday 2:47pm",
-      "concept": "A story-format case study following one real client Wednesday afternoon: a lead comes in, gets qualified by Claude, booked via GHL, briefed to the owner in Google Docs, all before they finish their coffee. Visual is a timestamped timeline showing each automated step happening while the owner does nothing. Highlights how time — not tools — is the real ROI.",
-      "hook": "At 2:47pm on a Wednesday, a $12K deal moved through my client's business. He was at the gym."
-    },
-    {
-      "number": 3,
-      "title": "Stop Hiring. Start Wiring.",
-      "concept": "A myth-bust post attacking the reflex to hire a VA or junior every time a bottleneck appears. Breaks down the true 12-month cost of a hire vs. a properly built N8N + Claude workflow doing the same job. Visual is a split comparison: 'Human Hire: £28K/year, sick days, training, mistakes' vs 'Automation: £2K setup, runs 24/7, never quits'.",
-      "hook": "Your next hire is a mistake. And I can prove it with a calculator."
-    }
-  ],
-  "wants_video": true,
-  "ig_caption": "Most business owners use 27 tools.\n\nI use 4.\n\nHere's why mine outperform yours:\n\n🧠 Claude AI = The brain (thinks, writes, decides)\n⚡ N8N = The nervous system (connects everything)\n🗣️ GoHighLevel = The mouth (client comms + CRM)\n💾 Google Workspace = The memory (stores it all)\n\nThat's it. 4 tools running 90% of daily ops.\n\nNo bloated subscriptions. No app-switching chaos. No duct-taped workflows falling apart at 2am.\n\nJust one clean stack doing the work of an entire team.\n\nHow many tools are you paying for right now that don't talk to each other?\n\nTime to audit your stack. 👇\n\n#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod #SmallBusinessOwner #DigitalTransformation #TechStack #ProductivityHacks #AutomationTools #ScaleYourBusiness #OnlineBusiness #SaaS #NoCode #BusinessGrowth #Solopreneur #AIforBusiness #MarketingAutomation #CRM #FutureOfWork",
-  "fb_caption": "Most business owners juggle 27 tools.\n\nI use 4. And mine outperform theirs.\n\nHere's the entire stack running my business:\n\n🧠 Claude AI = the brain that thinks and writes\n⚡ N8N = the nervous system connecting everything\n🗣️ GoHighLevel = the mouth handling client comms\n💾 Google Workspace = the memory storing it all\n\nThat's 90% of my daily operations. No bloated subscriptions. No app-switching. No 2am workflow failures.\n\nMost stacks fail because the tools don't actually talk to each other. Mine do.\n\nTime to audit yours.\n\nHow many tools are you paying for right now that aren't pulling their weight?\n\n#AIAutomation #BusinessAutomation #Entrepreneur #Accelod",
-  "ig_url": "https://i.ibb.co/bjDjgwWn/d18bdf8f8273.png",
-  "fb_url": "https://i.ibb.co/21z5YkLn/01172922cd1f.png",
-  "ig_html": null,
-  "fb_html": null,
+  "status": "idle",
+  "version": 0,
   "past_idea_titles": [
     "Fire Yourself First",
     "I Automated My Entire Client Onboarding in 4 Hours",
@@ -47,6 +13,5 @@
     "Wednesday 2:47pm",
     "Stop Hiring. Start Wiring."
   ],
-  "last_updated": "2026-07-09T21:21:27.504Z",
-  "motion_prompt": "Camera slowly pushes in over 4 seconds toward the center of the flow diagram, then eases to a gentle stop. Background dark gradient shifts subtly as faint cyan particles drift upward, and a soft radial glow expands behind the four tool nodes at 40% opacity. The headline fades in top-down, letter by letter over 1 second. Each of the four tool boxes (Claude, N8N, GHL, Google) scales up sequentially from 90% to 100% with their role labels wiping in left-to-right. Cyan connector lines trace between nodes in sequence, drawing on like ink. Cyan accent borders pulse once softly around each node. Final frame locks on the closing challenge text with a cyan underline drawing across beneath it."
+  "last_updated": "2026-07-09T21:30:00.000Z"
 }
