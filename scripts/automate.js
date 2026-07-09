@@ -525,6 +525,20 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
     if (/\bskip\b/.test(lower)) {
       writeState({ status: 'idle', wants_video: false, motion_prompt: null });
       console.log('Video skipped at prompt stage.');
+    } else if (/\bregenerate\s+prompt\b/.test(lower)) {
+      console.log('Regenerating motion prompt with improved generator...');
+      const newPrompt = await generateVideoPrompt(state.chosen_idea);
+      writeState({ motion_prompt: newPrompt });
+      await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
+        subject: `Re: Accelod Post – Updated video prompt`,
+        htmlBody: `<div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
+          <h2 style="color:#0B1929">Here's your updated motion prompt</h2>
+          <div style="background:#f4f4f4;border-left:4px solid #00D4FF;padding:16px 20px;margin:20px 0;border-radius:4px;font-style:italic;color:#222;line-height:1.6">
+            ${newPrompt}
+          </div>
+          <p style="color:#444">Reply <strong>"submit"</strong> to generate the video, paste your own version, or <strong>"regenerate prompt"</strong> for another attempt.</p>
+        </div>`
+      });
     } else {
       const isApproval = /^(submit|looks?\s+good|use\s+it|approve[d]?|yes|go(\s+ahead)?|send\s+it|ok(ay)?)[\s!.]*$/.test(lower);
       const motionPrompt = isApproval ? state.motion_prompt : emailBody.trim();
