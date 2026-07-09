@@ -1,5 +1,5 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "past_idea_titles": [
     "Fire Yourself First",
@@ -11,7 +11,30 @@
     "Anatomy of a $0 Lead Follow-Up Machine",
     "The 4-Tool Stack Running My Entire Business",
     "Wednesday 2:47pm",
-    "Stop Hiring. Start Wiring."
+    "Stop Hiring. Start Wiring.",
+    "The 47-Minute Rule",
+    "What Broke When I Tried To DIY My Automations",
+    "GoHighLevel Isn't A CRM"
   ],
-  "last_updated": "2026-07-09T21:30:00.000Z"
+  "last_updated": "2026-07-09T22:01:02.350Z",
+  "ideas": [
+    {
+      "number": 1,
+      "title": "The 47-Minute Rule",
+      "concept": "A data-driven post revealing that the average business owner wastes 47 minutes per day on tasks Claude AI can do in 3 seconds. Visual would be a split-screen infographic showing common daily tasks (email drafts, meeting summaries, proposal writing) with time comparisons — human vs AI. Ends with a calculation: 47 mins x 250 workdays = 195 hours/year of your life you'll never get back.",
+      "hook": "You're not busy. You're just doing $12/hour work in a $200/hour seat."
+    },
+    {
+      "number": 2,
+      "title": "What Broke When I Tried To DIY My Automations",
+      "concept": "A story-format post walking through a real (or composite) client scenario where they tried duct-taping Zapier, spreadsheets, and ChatGPT together before coming to Accelod. Visual would be a messy whiteboard-style diagram of their tangled setup, next to the clean N8N + GoHighLevel + Claude stack that replaced it. Lesson: cheap automation is the most expensive kind.",
+      "hook": "He spent 6 months and £4,200 building an automation that broke every Tuesday."
+    },
+    {
+      "number": 3,
+      "title": "GoHighLevel Isn't A CRM",
+      "concept": "A tool breakdown / hot-take post reframing GoHighLevel as an operating system, not a CRM — and explaining the 4 layers most users never activate (pipelines that trigger workflows, workflows that call Claude, Claude that writes back into Google Workspace, all logged via N8N). Visual would be a stacked diagram showing the 4 layers with a bold label: 'You bought a Ferrari to drive to Tesco.'",
+      "hook": "90% of GoHighLevel users are paying £297/month to send emails. That's insane."
+    }
+  ]
 }
