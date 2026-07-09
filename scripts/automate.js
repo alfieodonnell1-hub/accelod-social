@@ -246,18 +246,18 @@ async function generateVideo(imageUrl, motionPrompt) {
   const apiKey = process.env.HIGGSFIELD_API_KEY || '';
   if (!apiKey) throw new Error('HIGGSFIELD_API_KEY secret is not set');
 
-  // Try Basic auth (base64 KEY_ID:KEY_SECRET) — Higgsfield REST API standard
-  const basicAuth = 'Basic ' + Buffer.from(apiKey).toString('base64');
+  // Higgsfield auth: "Key KEY_ID:KEY_SECRET" — store both as "id:secret" in the GitHub secret
+  const authHeader = 'Key ' + apiKey;
   const BASE = 'https://platform.higgsfield.ai';
 
   console.log('Submitting video to Higgsfield:', motionPrompt.slice(0, 60));
-  const submitRes = await fetch(`${BASE}/v1/image2video/dop`, {
+  const submitRes = await fetch(`${BASE}/higgsfield-ai/dop/standard`, {
     method: 'POST',
-    headers: { 'Authorization': basicAuth, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({
-      model: 'dop-turbo',
+      image_url: imageUrl,
       prompt: motionPrompt,
-      input_images: [{ type: 'image_url', image_url: imageUrl }]
+      duration: 5
     })
   });
   const job = await submitRes.json();
@@ -270,7 +270,7 @@ async function generateVideo(imageUrl, motionPrompt) {
   // Poll every 30s for up to 15 minutes
   for (let i = 1; i <= 30; i++) {
     await new Promise(r => setTimeout(r, 30000));
-    const statusRes = await fetch(statusUrl, { headers: { 'Authorization': basicAuth } });
+    const statusRes = await fetch(statusUrl, { headers: { 'Authorization': authHeader } });
     const status = await statusRes.json();
     console.log(`Video status [${i}/30]: ${status.status}`);
     if (status.status === 'completed') {
