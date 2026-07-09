@@ -222,14 +222,24 @@ async function handleRepost() {
 }
 
 async function generateVideoPrompt(concept) {
-  return (await claude(`Write a Higgsfield image-to-video motion prompt for this social media post graphic.
-The graphic is a static dark-background business post that should be brought to life with subtle, premium motion.
+  return (await claude(`Write a detailed Higgsfield image-to-video prompt for this social media post graphic.
 Post concept: ${concept.title} — ${concept.concept}
 
-Rules: subtle is better than dramatic. Think slow particle drift, gentle cyan glow pulses on accent elements,
-slight camera zoom or parallax on the background texture, text elements with a soft shimmer.
-Keep it cinematic and professional — this is a B2B brand, not a consumer app.
-Under 60 words. Return ONLY the motion prompt.`, 200)).trim();
+Higgsfield animates a static image into a short video clip. Your prompt must describe EXACTLY what happens visually — not mood words, not metaphors. Be specific and concrete.
+
+Structure the prompt like this:
+1. Camera move: what does the camera do? (slow push-in, gentle zoom out, subtle drift left, etc.)
+2. Background: how does the bg texture/glow move? (particles rising, radial glow expanding, grid pulsing)
+3. Text/content elements: how do they animate? (fade in top to bottom, slide in from left, scale up, numbers count up, highlight sweeping across)
+4. Accent/colour elements: how do the cyan accents and highlights behave? (glow pulses, border traces, underline draws on)
+5. Ending: what does the final frame settle on? (steady hold on headline, zoom locked on CTA, etc.)
+
+Rules:
+- Every sentence must describe a VISIBLE ACTION, not a feeling
+- Use specific motion terms: ease-in, drift, pulse, trace, wipe, scale, fade, slide
+- 80-120 words — detailed enough for Higgsfield to work with
+- B2B professional tone — no explosions, no flash, no quick cuts
+- Return ONLY the prompt, no explanation`, 400)).trim();
 }
 
 async function generateVideo(imageUrl, motionPrompt) {
