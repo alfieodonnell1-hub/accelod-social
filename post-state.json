@@ -1,5 +1,5 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "past_idea_titles": [
     "Fire Yourself First",
@@ -14,27 +14,30 @@
     "Stop Hiring. Start Wiring.",
     "The 47-Minute Rule",
     "What Broke When I Tried To DIY My Automations",
-    "GoHighLevel Isn't A CRM"
+    "GoHighLevel Isn't A CRM",
+    "The 12-Second Quote That Used To Take 2 Days",
+    "73% of Automations Fail For The Same Boring Reason",
+    "How A Roofing Company Fired Its Spreadsheet"
   ],
-  "last_updated": "2026-07-13T22:31:05.603Z",
+  "last_updated": "2026-07-14T12:58:02.291Z",
   "ideas": [
     {
       "number": 1,
-      "title": "The 47-Minute Rule",
-      "concept": "A data-driven post revealing that the average business owner wastes 47 minutes per day on tasks Claude AI can do in 3 seconds. Visual would be a split-screen infographic showing common daily tasks (email drafts, meeting summaries, proposal writing) with time comparisons — human vs AI. Ends with a calculation: 47 mins x 250 workdays = 195 hours/year of your life you'll never get back.",
-      "hook": "You're not busy. You're just doing $12/hour work in a $200/hour seat."
+      "title": "The 12-Second Quote That Used To Take 2 Days",
+      "concept": "A before/after post breaking down how an N8N + Claude workflow reads inbound enquiries, pulls context from Google Workspace, and drafts a personalised quote in GoHighLevel before the prospect finishes their coffee. Visual: split-screen — left side a messy inbox with 47 unread emails, right side a clean dashboard with a green 'Quote Sent - 12s' timestamp.",
+      "hook": "Your competitors are still 'getting back to you next week.' You just closed the deal before lunch."
     },
     {
       "number": 2,
-      "title": "What Broke When I Tried To DIY My Automations",
-      "concept": "A story-format post walking through a real (or composite) client scenario where they tried duct-taping Zapier, spreadsheets, and ChatGPT together before coming to Accelod. Visual would be a messy whiteboard-style diagram of their tangled setup, next to the clean N8N + GoHighLevel + Claude stack that replaced it. Lesson: cheap automation is the most expensive kind.",
-      "hook": "He spent 6 months and £4,200 building an automation that broke every Tuesday."
+      "title": "73% of Automations Fail For The Same Boring Reason",
+      "concept": "A stat/data-driven post exposing why most business owners' automation attempts collapse within 90 days — they automate broken processes instead of fixing them first. Includes a 3-point diagnostic checklist. Visual: a bold red '73%' number over a graveyard of Zapier logos, with Accelod's fix framework underneath.",
+      "hook": "Automating a broken process just means you break things faster. Here's the number nobody wants to admit."
     },
     {
       "number": 3,
-      "title": "GoHighLevel Isn't A CRM",
-      "concept": "A tool breakdown / hot-take post reframing GoHighLevel as an operating system, not a CRM — and explaining the 4 layers most users never activate (pipelines that trigger workflows, workflows that call Claude, Claude that writes back into Google Workspace, all logged via N8N). Visual would be a stacked diagram showing the 4 layers with a bold label: 'You bought a Ferrari to drive to Tesco.'",
-      "hook": "90% of GoHighLevel users are paying £297/month to send emails. That's insane."
+      "title": "How A Roofing Company Fired Its Spreadsheet",
+      "concept": "A short case study story about a trades business drowning in job tracking chaos. Alfie rebuilt their ops on GoHighLevel pipelines, Claude-powered job summaries, and N8N syncing everything to Google Sheets for the accountant. Result: 14 hours a week back and zero lost quotes. Visual: a torn spreadsheet printout next to a clean pipeline view on a phone screen.",
+      "hook": "They were losing £8k a month in forgotten quotes. The fix wasn't hiring an ops manager."
     }
   ],
   "chosen_idea": null,
