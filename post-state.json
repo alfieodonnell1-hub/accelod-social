@@ -17,27 +17,33 @@
     "GoHighLevel Isn't A CRM",
     "The 12-Second Quote That Used To Take 2 Days",
     "73% of Automations Fail For The Same Boring Reason",
-    "How A Roofing Company Fired Its Spreadsheet"
+    "How A Roofing Company Fired Its Spreadsheet",
+    "The 12-Second Quote That Used To Take 2 Days",
+    "73% of Automations Fail For The Same Boring Reason",
+    "How A Roofing Company Fired Its Spreadsheet",
+    "The $8k Employee You Already Fired",
+    "I Asked Claude To Audit My Inbox. It Found 6 Hours.",
+    "The Plumber Who Books Jobs While He Sleeps"
   ],
-  "last_updated": "2026-07-14T12:58:02.291Z",
+  "last_updated": "2026-07-16T21:16:07.172Z",
   "ideas": [
     {
       "number": 1,
-      "title": "The 12-Second Quote That Used To Take 2 Days",
-      "concept": "A before/after post breaking down how an N8N + Claude workflow reads inbound enquiries, pulls context from Google Workspace, and drafts a personalised quote in GoHighLevel before the prospect finishes their coffee. Visual: split-screen — left side a messy inbox with 47 unread emails, right side a clean dashboard with a green 'Quote Sent - 12s' timestamp.",
-      "hook": "Your competitors are still 'getting back to you next week.' You just closed the deal before lunch."
+      "title": "The $8k Employee You Already Fired",
+      "concept": "A myth-bust style post exposing the hidden cost of manual admin work. Visual would be a mock 'employment contract' with line items like 'copy-pasting leads: 4hrs/week', 'chasing invoices: 3hrs/week', totaling to a shocking annual cost — with a red 'TERMINATED' stamp across it.",
+      "hook": "You're paying an $8,000/year salary to an employee who doesn't exist."
     },
     {
       "number": 2,
-      "title": "73% of Automations Fail For The Same Boring Reason",
-      "concept": "A stat/data-driven post exposing why most business owners' automation attempts collapse within 90 days — they automate broken processes instead of fixing them first. Includes a 3-point diagnostic checklist. Visual: a bold red '73%' number over a graveyard of Zapier logos, with Accelod's fix framework underneath.",
-      "hook": "Automating a broken process just means you break things faster. Here's the number nobody wants to admit."
+      "title": "I Asked Claude To Audit My Inbox. It Found 6 Hours.",
+      "concept": "A tool breakdown post showing exactly how Claude AI + Google Workspace can categorise, draft replies, and flag priority emails. Visual is a split screen: chaotic inbox on the left, a clean dashboard with AI-drafted replies on the right, with time-saved counter ticking up.",
+      "hook": "Your inbox isn't a to-do list. It's a tax on your attention."
     },
     {
       "number": 3,
-      "title": "How A Roofing Company Fired Its Spreadsheet",
-      "concept": "A short case study story about a trades business drowning in job tracking chaos. Alfie rebuilt their ops on GoHighLevel pipelines, Claude-powered job summaries, and N8N syncing everything to Google Sheets for the accountant. Result: 14 hours a week back and zero lost quotes. Visual: a torn spreadsheet printout next to a clean pipeline view on a phone screen.",
-      "hook": "They were losing £8k a month in forgotten quotes. The fix wasn't hiring an ops manager."
+      "title": "The Plumber Who Books Jobs While He Sleeps",
+      "concept": "A short case study / story post about a trades client using N8N + GoHighLevel to auto-qualify leads, send quotes, and book jobs overnight. Visual: a phone screenshot showing 3 new bookings confirmed between 11pm and 6am, with a caption 'while he was asleep'.",
+      "hook": "He woke up to 3 booked jobs. He didn't answer a single call."
     }
   ],
   "chosen_idea": null,
