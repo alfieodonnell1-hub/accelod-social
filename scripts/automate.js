@@ -466,7 +466,7 @@ Hook: ${chosen.hook}
 
 Return ONLY JSON: { "igCaption": "...", "fbCaption": "..." }
 
-Instagram caption: short, human, punchy — max 6-8 lines total. Write like a real person, not a marketer. One idea per line. No fluff. Soft CTA at the end ("Want one?" / "Sound familiar?" / "Still doing this manually?"). End with 6-10 tight hashtags (most relevant only: #AIAutomation #Accelod #ClaudeAI #N8N #GoHighLevel #BusinessAutomation #Entrepreneur).
+Instagram caption: short, human, punchy — max 6-8 lines total. Write like a real person, not a marketer. One idea per line. No fluff. Soft CTA at the end ("Want one?" / "Sound familiar?" / "Still doing this manually?"). End with 20-25 hashtags covering niche + broad reach (e.g. #AIAutomation #Accelod #ClaudeAI #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #WorkflowAutomation #AIAgents #SmallBusinessOwner #NoCode #SaaS #Solopreneur #DigitalTransformation #TechStack #ScaleYourBusiness #AITools #MarketingAutomation #ProductivityHacks #FutureOfWork).
 Facebook caption: short, human, punchy — max 6-8 lines. Same tone — real person, not a marketer. No bullet-point lists, no em-dashes mid-sentence. One soft engagement question at the end. 3-4 hashtags max.`, 1024),
       'captions parse'
     );
