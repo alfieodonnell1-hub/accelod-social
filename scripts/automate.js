@@ -466,8 +466,8 @@ Hook: ${chosen.hook}
 
 Return ONLY JSON: { "igCaption": "...", "fbCaption": "..." }
 
-Instagram caption: punchy, direct, max 10-12 lines, soft CTA ("Sound familiar?" / "Doing this manually?" etc), end with 20-25 hashtags (#AIAutomation #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #ClaudeAI #GoogleWorkspace #WorkflowAutomation #AIAgents #Accelod etc).
-Facebook caption: punchy, direct, max 10-12 lines, same soft CTA style — 3 to 5 hashtags max (most relevant only, e.g. #AIAutomation #BusinessAutomation #Entrepreneur), conversational tone, ends with a single engagement question to drive comments.`, 1024),
+Instagram caption: short, human, punchy — max 6-8 lines total. Write like a real person, not a marketer. One idea per line. No fluff. Soft CTA at the end ("Want one?" / "Sound familiar?" / "Still doing this manually?"). End with 6-10 tight hashtags (most relevant only: #AIAutomation #Accelod #ClaudeAI #N8N #GoHighLevel #BusinessAutomation #Entrepreneur).
+Facebook caption: short, human, punchy — max 6-8 lines. Same tone — real person, not a marketer. No bullet-point lists, no em-dashes mid-sentence. One soft engagement question at the end. 3-4 hashtags max.`, 1024),
       'captions parse'
     );
     await sendPreviewEmail(igUrl, fbUrl, 1, null, igPath, fbPath);
