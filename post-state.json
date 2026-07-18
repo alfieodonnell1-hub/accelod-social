@@ -1,5 +1,5 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "past_idea_titles": [
     "Fire Yourself First",
@@ -23,27 +23,30 @@
     "How A Roofing Company Fired Its Spreadsheet",
     "The $8k Employee You Already Fired",
     "I Asked Claude To Audit My Inbox. It Found 6 Hours.",
-    "The Plumber Who Books Jobs While He Sleeps"
+    "The Plumber Who Books Jobs While He Sleeps",
+    "Your N8N Workflow Is Held Together By Duct Tape",
+    "The Google Workspace Stack I'd Rebuild From Scratch",
+    "The Electrician Who Replaced His Office Manager With A Workflow"
   ],
-  "last_updated": "2026-07-17T22:20:01.277Z",
+  "last_updated": "2026-07-18T12:41:28.311Z",
   "ideas": [
     {
       "number": 1,
-      "title": "The $8k Employee You Already Fired",
-      "concept": "A myth-bust style post exposing the hidden cost of manual admin work. Visual would be a mock 'employment contract' with line items like 'copy-pasting leads: 4hrs/week', 'chasing invoices: 3hrs/week', totaling to a shocking annual cost — with a red 'TERMINATED' stamp across it.",
-      "hook": "You're paying an $8,000/year salary to an employee who doesn't exist."
+      "title": "Your N8N Workflow Is Held Together By Duct Tape",
+      "concept": "A myth-bust post calling out the DIY automation crowd who stitch together 40-node N8N workflows without error handling, retries, or logging. Visual would be a screenshot of a chaotic, tangled N8N canvas next to a clean, modular version — a 'before vs. how a pro builds it' side-by-side.",
+      "hook": "If your automation breaks and you don't find out for 3 days, you don't have an automation. You have a liability."
     },
     {
       "number": 2,
-      "title": "I Asked Claude To Audit My Inbox. It Found 6 Hours.",
-      "concept": "A tool breakdown post showing exactly how Claude AI + Google Workspace can categorise, draft replies, and flag priority emails. Visual is a split screen: chaotic inbox on the left, a clean dashboard with AI-drafted replies on the right, with time-saved counter ticking up.",
-      "hook": "Your inbox isn't a to-do list. It's a tax on your attention."
+      "title": "The Google Workspace Stack I'd Rebuild From Scratch",
+      "concept": "A tool breakdown post showing the exact Google Workspace + Claude + N8N stack Alfie uses to run Accelod — Gmail filters feeding Claude for triage, Docs auto-generated from Sheets, Calendar events triggering GHL sequences. Visual: a clean flowchart with logos and arrows showing data movement between the four tools.",
+      "hook": "Most business owners use 4% of Google Workspace. Here's what the other 96% looks like when you plug Claude into it."
     },
     {
       "number": 3,
-      "title": "The Plumber Who Books Jobs While He Sleeps",
-      "concept": "A short case study / story post about a trades client using N8N + GoHighLevel to auto-qualify leads, send quotes, and book jobs overnight. Visual: a phone screenshot showing 3 new bookings confirmed between 11pm and 6am, with a caption 'while he was asleep'.",
-      "hook": "He woke up to 3 booked jobs. He didn't answer a single call."
+      "title": "The Electrician Who Replaced His Office Manager With A Workflow",
+      "concept": "A case study post about a real trades client who eliminated a $45k/year admin role by combining GoHighLevel for lead intake, Claude for quote generation, and N8N for job scheduling. Visual: a split graphic — 'Before: 1 office manager, 3 spreadsheets, missed jobs' vs. 'After: 1 workflow, 0 dropped leads, sleeps in on Sundays.'",
+      "hook": "He didn't fire her because she was bad. He fired her because a workflow was better."
     }
   ],
   "chosen_idea": null,
