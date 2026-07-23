@@ -348,13 +348,7 @@ async function handleResendPreview() {
   console.log('Re-rendering stored HTML for resend...');
   await takeScreenshot(state.ig_html, igPath);
   await takeScreenshot(state.fb_html, fbPath);
-  let { ig_url: igUrl, fb_url: fbUrl } = state;
-  if (!igUrl || !fbUrl) {
-    console.log('No stored URLs — uploading to imgbb...');
-    [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
-    writeState({ ig_url: igUrl, fb_url: fbUrl });
-  }
-  await sendPreviewEmail(igUrl, fbUrl, state.version, null, igPath, fbPath);
+  await sendPreviewEmail(state.ig_url, state.fb_url, state.version, null, igPath, fbPath);
   console.log('Preview email resent for v' + state.version);
 }
 
