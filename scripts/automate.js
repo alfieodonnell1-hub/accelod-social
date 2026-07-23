@@ -41,9 +41,9 @@ async function uploadImage(imagePath) {
   return data.data.url;
 }
 
-async function claude(prompt, maxTokens = 8192) {
+async function claude(prompt, maxTokens = 8192, model = 'claude-opus-4-7') {
   const msg = await anthropic.messages.create({
-    model: 'claude-opus-4-7',
+    model,
     max_tokens: maxTokens,
     messages: [{ role: 'user', content: prompt }]
   });
@@ -95,7 +95,7 @@ Return ONLY valid JSON:
     { "number": 2, "title": "...", "concept": "...", "hook": "..." },
     { "number": 3, "title": "...", "concept": "...", "hook": "..." }
   ]
-}`, 4096);
+}`, 4096, 'claude-haiku-4-5-20251001');
   return parseJSON(raw, 'generateIdeas');
 }
 
@@ -239,7 +239,7 @@ Rules:
 - Use specific motion terms: ease-in, drift, pulse, trace, wipe, scale, fade, slide
 - 80-120 words — detailed enough for Higgsfield to work with
 - B2B professional tone — no explosions, no flash, no quick cuts
-- Return ONLY the prompt, no explanation`, 400)).trim();
+- Return ONLY the prompt, no explanation`, 400, 'claude-haiku-4-5-20251001')).trim();
 }
 
 async function generateVideo(imageUrl, motionPrompt) {
@@ -467,7 +467,7 @@ Hook: ${chosen.hook}
 Return ONLY JSON: { "igCaption": "...", "fbCaption": "..." }
 
 Instagram caption: short, human, punchy — max 6-8 lines total. Write like a real person, not a marketer. One idea per line. No fluff. Soft CTA at the end ("Want one?" / "Sound familiar?" / "Still doing this manually?"). End with 20-25 hashtags covering niche + broad reach (e.g. #AIAutomation #Accelod #ClaudeAI #N8N #GoHighLevel #BusinessAutomation #Entrepreneur #WorkflowAutomation #AIAgents #SmallBusinessOwner #NoCode #SaaS #Solopreneur #DigitalTransformation #TechStack #ScaleYourBusiness #AITools #MarketingAutomation #ProductivityHacks #FutureOfWork).
-Facebook caption: short, human, punchy — max 6-8 lines. Same tone — real person, not a marketer. No bullet-point lists, no em-dashes mid-sentence. One soft engagement question at the end. 3-4 hashtags max.`, 1024),
+Facebook caption: short, human, punchy — max 6-8 lines. Same tone — real person, not a marketer. No bullet-point lists, no em-dashes mid-sentence. One soft engagement question at the end. 3-4 hashtags max.`, 1024, 'claude-haiku-4-5-20251001'),
       'captions parse'
     );
     await sendPreviewEmail(igUrl, fbUrl, 1, null, igPath, fbPath);
@@ -491,7 +491,7 @@ Are they approving to post, requesting changes, or approving with a specific sch
 - "post now" / "post immediately" / "go live now" → postNow: true
 - Specific time (e.g. "schedule for Friday 6pm", "post tomorrow at 1pm") → convert from UK local to UTC ISO 8601 and put in scheduledAt
 - Plain approval ("post it", "looks good") → queue as normal
-Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`, 512),
+Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes description or null", "scheduledAt": "ISO8601 datetime or null", "postNow": true|false }`, 512, 'claude-haiku-4-5-20251001'),
         'intent parse'
       );
     }
@@ -507,8 +507,8 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
       if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot apply amendments');
       console.log('Applying amendments:', intent.amendments);
       const [updIgRaw, updFbRaw] = await Promise.all([
-        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout.\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384),
-        claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format.\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384)
+        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout.\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384, 'claude-sonnet-4-5'),
+        claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format.\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384, 'claude-sonnet-4-5')
       ]);
       const updIg = stripHtml(updIgRaw);
       const updFb = stripHtml(updFbRaw);
