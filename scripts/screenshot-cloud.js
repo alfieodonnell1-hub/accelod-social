@@ -29,6 +29,23 @@ async function screenshot(htmlFile, outFile) {
       document.fonts.load('400 1em "JetBrains Mono"'),
     ]);
   });
+
+  // document.fonts.load() resolves even when the Google Fonts request failed
+  // (silently falling back to a system font) — and document.fonts.check() is
+  // useless here too, since Chromium reports a family as "available" via
+  // fallback substitution regardless of whether it actually loaded. The only
+  // reliable signal is whether a FontFace for that family actually landed in
+  // document.fonts with status 'loaded'.
+  await page.evaluate(() => {
+    const required = ['Outfit', 'DM Sans', 'JetBrains Mono'];
+    const loadedFamilies = new Set();
+    document.fonts.forEach(f => { if (f.status === 'loaded') loadedFamilies.add(f.family.replace(/["']/g, '')); });
+    const missing = required.filter(fam => !loadedFamilies.has(fam));
+    if (missing.length) {
+      throw new Error('Required font(s) failed to load, refusing to screenshot with fallback fonts: ' + missing.join(', '));
+    }
+  });
+
   await new Promise(r => setTimeout(r, 800));
 
   const el = await page.$('#post');
