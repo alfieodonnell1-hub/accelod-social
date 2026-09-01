@@ -115,8 +115,11 @@ Return ONLY valid JSON:
   return parseJSON(raw, 'generateIdeas');
 }
 
-async function generatePostHTML(concept, platform) {
+async function generatePostHTML(concept, platform, fixes = null) {
   const isIg = platform === 'instagram';
+  const fixesBlock = (fixes && fixes.length)
+    ? `\nMANDATORY FIXES — a visual review of a previous draft of this exact post found these problems. You MUST address every one of them in this version:\n${fixes.map(f => `- ${f}`).join('\n')}\n`
+    : '';
   const raw = await claude(`Generate a complete self-contained HTML social media post for Accelod AI.
 
 CONCEPT: ${concept.title} — ${concept.concept}
@@ -131,6 +134,7 @@ LAYOUT: ${isIg
 
 ${BRAND}
 ${loadExamplesBlock()}
+${fixesBlock}
 Include export PNG button + dom-to-image-more@3.3.0 CDN script.
 Return ONLY the complete HTML file — no markdown, no code fences, no explanation.`, 16384);
   return stripHtml(raw);
@@ -142,6 +146,50 @@ async function takeScreenshot(html, outPath) {
   fs.writeFileSync(tmp, html);
   execSync(`node "${path.join(__dirname, 'screenshot-cloud.js')}" "${tmp}" "${outPath}"`, { stdio: 'inherit' });
   if (!fs.existsSync(outPath)) throw new Error(`Screenshot failed: ${outPath} was not created`);
+}
+
+async function reviewPost(pngPath, platform) {
+  const base64 = fs.readFileSync(pngPath, { encoding: 'base64' });
+  const msg = await anthropic.messages.create({
+    model: 'claude-sonnet-5',
+    max_tokens: 1024,
+    messages: [{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/png', data: base64 } },
+        { type: 'text', text: `You are doing a final visual QA pass on this rendered ${platform} social media post image before it goes to the client for approval.
+
+${BRAND}
+
+Imagine viewing this at thumbnail size while scrolling a feed. Check specifically for:
+- Headline legibility — readable at a glance, not cramped, overlapping, or too small
+- Any panel or body text that looks smaller than ~22px
+- Poor contrast on gradient/cyan text against the background
+- Empty panels, or panels that are just a wall of plain text with no visual accent (icon, stat, colour stripe)
+- Accelod logo missing or not clearly visible
+- Anything cropped, cut off, or overflowing the canvas edge
+
+Return ONLY strict JSON, no markdown, no explanation: { "pass": true|false, "violations": ["short description", ...] }
+If there are no issues, return { "pass": true, "violations": [] }.` }
+      ]
+    }]
+  });
+  return parseJSON(msg.content[0].text, 'reviewPost:' + platform);
+}
+
+async function generateReviewedPost(concept, platform, outPath) {
+  let html = await generatePostHTML(concept, platform);
+  await takeScreenshot(html, outPath);
+  const review1 = await reviewPost(outPath, platform);
+  console.log(`Visual review (${platform}, attempt 1):`, JSON.stringify(review1));
+  if (!review1.pass) {
+    console.log(`Regenerating ${platform} post to address:`, review1.violations.join('; '));
+    html = await generatePostHTML(concept, platform, review1.violations);
+    await takeScreenshot(html, outPath);
+    const review2 = await reviewPost(outPath, platform);
+    console.log(`Visual review (${platform}, attempt 2):`, JSON.stringify(review2));
+  }
+  return html;
 }
 
 async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath) {
@@ -437,11 +485,12 @@ async function handleEmailReply(emailBody) {
       return;
     }
     console.log('Generating post for option', parsed.choice);
-    const [igHtml, fbHtml] = await Promise.all([generatePostHTML(chosen, 'instagram'), generatePostHTML(chosen, 'facebook')]);
     const igPath = path.join(TEMP_DIR, 'ig.png');
     const fbPath = path.join(TEMP_DIR, 'fb.png');
-    await takeScreenshot(igHtml, igPath);
-    await takeScreenshot(fbHtml, fbPath);
+    const [igHtml, fbHtml] = await Promise.all([
+      generateReviewedPost(chosen, 'instagram', igPath),
+      generateReviewedPost(chosen, 'facebook', fbPath)
+    ]);
     const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
     const caps = parseJSON(
       await claude(`Generate captions for this Accelod post:
