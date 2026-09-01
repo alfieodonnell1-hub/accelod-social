@@ -88,9 +88,13 @@ function parseJSON(text, context) {
   }
 }
 
+function dedupeTitles(titles) {
+  return [...new Set(titles)];
+}
+
 async function generateIdeas(feedback = null, avoidTitles = []) {
   const avoidClause = avoidTitles.length
-    ? `\nDO NOT repeat or closely resemble any of these previously suggested topics: ${avoidTitles.slice(-12).join(' | ')}`
+    ? `\nDO NOT repeat or closely resemble any of these previously suggested topics — treat two ideas built around the same theme, hook, or story shape as duplicates even if the wording differs: ${dedupeTitles(avoidTitles).slice(-30).join(' | ')}`
     : '';
   const feedbackClause = feedback
     ? `\nThe user gave this feedback on the previous ideas: "${feedback}". Use it to guide a different direction.`
@@ -431,7 +435,7 @@ async function handleSchedule() {
     </div>`
   });
 
-  const pastTitles = [...(state.past_idea_titles || []), ...ideas.map(i => i.title)];
+  const pastTitles = dedupeTitles([...(state.past_idea_titles || []), ...ideas.map(i => i.title)]);
   writeState({ status: 'awaiting_choice', ideas, version: 0, past_idea_titles: pastTitles });
   console.log('Ideas emailed successfully.');
 }
@@ -448,9 +452,9 @@ async function handleEmailReply(emailBody) {
     if (!choiceMatch) {
       // No number picked — treat reply as feedback, regenerate ideas
       console.log('No choice number — regenerating ideas with feedback:', emailBody.slice(0, 80));
-      const allPastTitles = [...(state.past_idea_titles || []), ...state.ideas.map(i => i.title)];
+      const allPastTitles = dedupeTitles([...(state.past_idea_titles || []), ...state.ideas.map(i => i.title)]);
       const { ideas: newIdeas } = await generateIdeas(emailBody, allPastTitles);
-      const newPastTitles = [...allPastTitles, ...newIdeas.map(i => i.title)];
+      const newPastTitles = dedupeTitles([...allPastTitles, ...newIdeas.map(i => i.title)]);
 
       await callN8n(process.env.N8N_EMAIL_WEBHOOK, {
         subject: `Re: Accelod Post Options – 3 fresh ideas`,
