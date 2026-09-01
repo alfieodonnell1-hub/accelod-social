@@ -7,7 +7,22 @@ const ROOT = path.join(__dirname, '..');
 const STATE_FILE = path.join(ROOT, 'post-state.json');
 const TEMP_DIR = path.join(ROOT, 'temp');
 const BRAND = fs.readFileSync(path.join(ROOT, 'brand', 'ACCELOD-BRAND.md'), 'utf8');
+const EXAMPLES_DIR = path.join(ROOT, 'brand', 'examples');
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+function loadExamplesBlock() {
+  let files;
+  try {
+    files = fs.readdirSync(EXAMPLES_DIR).filter(f => f.endsWith('.html')).sort().slice(0, 3);
+  } catch {
+    return '';
+  }
+  if (files.length === 0) return '';
+  const examples = files.map((f, i) =>
+    `EXAMPLE ${i + 1} (${f}):\n${fs.readFileSync(path.join(EXAMPLES_DIR, f), 'utf8')}`
+  ).join('\n\n');
+  return `\nREFERENCE EXAMPLES — match the visual density and rhythm of these past posts. Do NOT copy their content, concept, or specific numbers — only their layout quality and pacing:\n\n${examples}\n`;
+}
 
 function readState() {
   try { return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); }
@@ -115,7 +130,7 @@ LAYOUT: ${isIg
   : `Facebook landscape (1200×630). Left column (360px): badge + headline + subtitle + CTA + logo. Right panel (flex:1): dark content panel (#06101A) — MUST be visually rich with 3-5 items using icons, stats, or comparison rows. Never just plain text. Panel must NEVER be empty.`}
 
 ${BRAND}
-
+${loadExamplesBlock()}
 Include export PNG button + dom-to-image-more@3.3.0 CDN script.
 Return ONLY the complete HTML file — no markdown, no code fences, no explanation.`, 16384);
   return stripHtml(raw);
