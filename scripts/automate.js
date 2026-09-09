@@ -156,7 +156,7 @@ async function reviewPost(pngPath, platform) {
   const base64 = fs.readFileSync(pngPath, { encoding: 'base64' });
   const msg = await anthropic.messages.create({
     model: 'claude-sonnet-5',
-    max_tokens: 1024,
+    max_tokens: 4096,
     messages: [{
       role: 'user',
       content: [
@@ -178,7 +178,9 @@ If there are no issues, return { "pass": true, "violations": [] }.` }
       ]
     }]
   });
-  return parseJSON(msg.content[0].text, 'reviewPost:' + platform);
+  const textBlock = (msg.content || []).find(b => b.type === 'text');
+  if (!textBlock) throw new Error(`reviewPost:${platform} returned no text block (stop_reason: ${msg.stop_reason})`);
+  return parseJSON(textBlock.text, 'reviewPost:' + platform);
 }
 
 async function generateReviewedPost(concept, platform, outPath) {

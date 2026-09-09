@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Accelod – Code Once Automate Forever FB</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.3.0/dist/dom-to-image-more.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#111; display:flex; flex-direction:column; align-items:center; padding:20px; font-family:'DM Sans',sans-serif; }
+  #post {
+    width:1200px; height:630px;
+    background:#0B1929;
+    position:relative; overflow:hidden;
+    color:#fff; padding:44px 48px;
+    display:flex; align-items:center;
+  }
+  .dot-grid { position:absolute; inset:0; background-image:radial-gradient(circle,rgba(0,212,255,0.07) 1px,transparent 1px); background-size:24px 24px; pointer-events:none; }
+  .glow { position:absolute; top:-30px; right:120px; width:640px; height:640px; background:radial-gradient(circle,rgba(0,212,255,0.16),transparent 65%); pointer-events:none; }
+  .watermark-badge { position:absolute; top:36px; right:44px; width:52px; height:52px; background:#06101A; border:1px solid rgba(0,212,255,0.3); border-radius:12px; display:flex; align-items:center; justify-content:center; z-index:3; }
+
+  .left { width:520px; position:relative; z-index:2; flex-shrink:0; }
+  .badge { display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border:1px solid rgba(0,212,255,0.5); border-radius:100px; font-family:'JetBrains Mono',monospace; font-size:12px; color:#00D4FF; width:fit-content; margin-bottom:22px; }
+  .badge-dot { width:6px; height:6px; border-radius:50%; background:#00D4FF; box-shadow:0 0 6px #00D4FF; }
+
+  .headline { font-family:'Outfit',sans-serif; font-weight:900; font-size:56px; line-height:0.98; letter-spacing:-0.03em; margin-bottom:20px; }
+  .headline .l1 { color:#fff; display:block; }
+  .headline .l2 { display:block; background:linear-gradient(90deg,#00D4FF,#33E1FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .headline .l3 { display:block; color:#fff; }
+
+  .subtitle { font-size:17px; line-height:1.5; color:rgba(255,255,255,0.55); max-width:440px; margin-bottom:24px; }
+
+  .tag-row { display:flex; gap:10px; margin-bottom:26px; }
+  .tag { display:flex; align-items:center; gap:6px; padding:8px 14px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:100px; font-family:'JetBrains Mono',monospace; font-size:13px; color:rgba(255,255,255,0.7); }
+  .tag img, .tag svg { width:14px; height:14px; }
+  .tag .dot { width:8px; height:8px; border-radius:50%; }
+
+  .stat-line { display:flex; align-items:baseline; gap:10px; margin-bottom:22px; }
+  .stat-line .stat-num { font-family:'Outfit',sans-serif; font-weight:900; font-size:34px; background:linear-gradient(90deg,#00D4FF,#33E1FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .stat-line .stat-label { font-family:'JetBrains Mono',monospace; font-size:13px; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.06em; }
+  .footer-row { display:flex; align-items:center; gap:20px; }
+  .cta { display:inline-flex; align-items:center; gap:10px; padding:14px 26px; background:rgba(0,212,255,0.1); border:1.5px solid #00D4FF; color:#fff; border-radius:100px; font-family:'Outfit',sans-serif; font-weight:700; font-size:16px; width:fit-content; }
+  .logo { font-family:'Outfit',sans-serif; font-weight:900; font-size:22px; letter-spacing:-0.02em; background:linear-gradient(135deg,#00D4FF,#33E1FF); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+  .right { position:absolute; right:44px; top:110px; width:560px; z-index:2; }
+  .terminal { background:#06101A; border:1px solid rgba(0,212,255,0.25); border-radius:14px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .term-bar { display:flex; align-items:center; gap:8px; padding:10px 14px; background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(255,255,255,0.06); }
+  .term-dot { width:10px; height:10px; border-radius:50%; }
+  .term-file { margin-left:8px; font-family:'JetBrains Mono',monospace; font-size:12px; color:rgba(255,255,255,0.4); }
+  .term-body { padding:18px 20px; font-family:'JetBrains Mono',monospace; font-size:14px; line-height:1.8; }
+  .c-comment { color:#5B7A99; }
+  .c-keyword { color:#00D4FF; }
+  .c-string { color:#F59E0B; }
+  .c-check { color:#22C55E; }
+
+  .flow-strip { display:flex; align-items:center; gap:14px; margin-top:14px; background:#06101A; border:1px solid rgba(0,212,255,0.18); border-radius:12px; padding:14px 18px; }
+  .flow-dot { width:14px; height:14px; border-radius:50%; }
+  .flow-line { flex:1; height:2px; background:rgba(255,255,255,0.12); }
+  .flow-toggle { width:20px; height:20px; border-radius:5px; }
+  button { position:absolute; bottom:-50px; padding:10px 20px; background:#00D4FF; color:#0B1929; border:none; border-radius:6px; cursor:pointer; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="claude-star" viewBox="0 0 100 100">
+    <g fill="currentColor">
+      <rect x="48" y="5" width="4" height="90"/>
+      <rect x="48" y="5" width="4" height="90" transform="rotate(30 50 50)"/>
+      <rect x="48" y="5" width="4" height="90" transform="rotate(60 50 50)"/>
+      <rect x="48" y="5" width="4" height="90" transform="rotate(90 50 50)"/>
+      <rect x="48" y="5" width="4" height="90" transform="rotate(120 50 50)"/>
+      <rect x="48" y="5" width="4" height="90" transform="rotate(150 50 50)"/>
+    </g>
+  </symbol>
+</svg>
+
+<div id="post">
+  <div class="dot-grid"></div>
+  <div class="glow"></div>
+  <div class="watermark-badge"><img src="https://cdn.simpleicons.org/n8n/EA4B71" width="24" height="24"></div>
+
+  <div class="left">
+    <div class="badge"><svg width="13" height="13" style="color:#00D4FF"><use href="#claude-star"/></svg>Built With Claude</div>
+    <h1 class="headline"><span class="l1">Code Once.</span><span class="l2">Automate</span><span class="l3">Forever.</span></h1>
+    <p class="subtitle">Meet the new breed of builders — wiring AI agents, APIs, and workflows in N8N while you're still opening your inbox.</p>
+    <div class="tag-row">
+      <div class="tag"><img src="https://cdn.simpleicons.org/n8n/EA4B71">n8n</div>
+      <div class="tag"><svg style="color:#00D4FF"><use href="#claude-star"/></svg>Claude</div>
+      <div class="tag"><div class="dot" style="background:#22C55E"></div>GoHighLevel</div>
+    </div>
+    <div class="stat-line"><span class="stat-num">12 hrs</span><span class="stat-label">saved per week, per workflow</span></div>
+    <div class="footer-row">
+      <div class="cta">Still doing this by hand? →</div>
+      <div class="logo">Accelod AI</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="terminal">
+      <div class="term-bar">
+        <div class="term-dot" style="background:#EF4444"></div>
+        <div class="term-dot" style="background:#F59E0B"></div>
+        <div class="term-dot" style="background:#22C55E"></div>
+        <div class="term-file">workflow.n8n.json</div>
+      </div>
+      <div class="term-body">
+        <div><span class="c-comment">// Trigger: New lead</span></div>
+        <div><span class="c-keyword">const</span> flow = <span class="c-keyword">new</span> Workflow({</div>
+        <div>&nbsp;&nbsp;trigger: <span class="c-string">"webhook"</span>,</div>
+        <div>&nbsp;&nbsp;nodes: [<span class="c-string">"claude"</span>, <span class="c-string">"crm"</span>, <span class="c-string">"ghl"</span>]</div>
+        <div>});</div>
+        <div><span class="c-keyword">await</span> flow.run(); <span class="c-comment">// </span><span class="c-check">✓ 3 deals</span></div>
+      </div>
+    </div>
+    <div class="flow-strip">
+      <div class="flow-dot" style="background:#EA4B71"></div>
+      <div class="flow-line"></div>
+      <div class="flow-dot" style="background:#00D4FF"></div>
+      <div class="flow-line"></div>
+      <div class="flow-dot" style="background:#22C55E"></div>
+      <div class="flow-line"></div>
+      <div class="flow-toggle" style="background:#00D4FF"></div>
+      <div class="flow-toggle" style="background:#22C55E"></div>
+    </div>
+  </div>
+</div>
+<button id="exportBtn">Export PNG</button>
+<script>
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    domtoimage.toPng(document.getElementById('post'), { width: 1200, height: 630, quality: 1 })
+      .then(dataUrl => { const link = document.createElement('a'); link.download = 'accelod-code-once.png'; link.href = dataUrl; link.click(); });
+  });
+</script>
+</body>
+</html>
