@@ -198,6 +198,29 @@ async function generateReviewedPost(concept, platform, outPath) {
   return html;
 }
 
+async function amendAndReviewPost(basePrompt, currentHtml, platform, outPath) {
+  let html = stripHtml(await claude(basePrompt, 16384, 'claude-sonnet-4-5'));
+  if (html.trim() === currentHtml.trim()) {
+    // No change applied for this platform (e.g. an IG-only request left FB untouched) —
+    // nothing new to review, and re-running the same prompt would just repeat this.
+    await takeScreenshot(html, outPath);
+    console.log(`Amendment (${platform}): no change applied, skipping review.`);
+    return html;
+  }
+  await takeScreenshot(html, outPath);
+  const review1 = await reviewPost(outPath, platform);
+  console.log(`Amendment visual review (${platform}, attempt 1):`, JSON.stringify(review1));
+  if (!review1.pass) {
+    console.log(`Regenerating amended ${platform} post to address:`, review1.violations.join('; '));
+    const retryPrompt = `${basePrompt}\n\nA visual review of your last attempt found these problems — fix every one of them in this version:\n${review1.violations.map(v => `- ${v}`).join('\n')}`;
+    html = stripHtml(await claude(retryPrompt, 16384, 'claude-sonnet-4-5'));
+    await takeScreenshot(html, outPath);
+    const review2 = await reviewPost(outPath, platform);
+    console.log(`Amendment visual review (${platform}, attempt 2):`, JSON.stringify(review2));
+  }
+  return html;
+}
+
 async function sendPreviewEmail(igUrl, fbUrl, version, amendNote, igPath, fbPath) {
   const note = amendNote ? `<p style="color:#666"><em>Changes applied: ${amendNote}</em></p>` : '';
   const igJpg = igPath ? igPath.replace('.png', '-email.jpg') : null;
@@ -546,16 +569,14 @@ Return ONLY JSON: { "intent": "approve"|"amend", "amendments": "changes descript
     } else {
       if (!state.ig_html || !state.fb_html) throw new Error('State is missing HTML — cannot apply amendments');
       console.log('Applying amendments:', intent.amendments);
-      const [updIgRaw, updFbRaw] = await Promise.all([
-        claude(`Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout below.\n\n${BRAND}\n\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384, 'claude-sonnet-4-5'),
-        claude(`You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format. Preserve all brand rules below.\n\n${BRAND}\n\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`, 16384, 'claude-sonnet-4-5')
-      ]);
-      const updIg = stripHtml(updIgRaw);
-      const updFb = stripHtml(updFbRaw);
       const igPath = path.join(TEMP_DIR, 'ig.png');
       const fbPath = path.join(TEMP_DIR, 'fb.png');
-      await takeScreenshot(updIg, igPath);
-      await takeScreenshot(updFb, fbPath);
+      const igPrompt = `Update this Instagram post HTML. Changes requested: ${intent.amendments}\n\nOnly apply changes to the Instagram portrait format (1080x1350). Preserve all brand rules and layout below.\n\n${BRAND}\n${loadExamplesBlock()}\nCurrent HTML:\n${state.ig_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`;
+      const fbPrompt = `You are updating the Facebook landscape post (1200x630). Changes requested: ${intent.amendments}\n\nIMPORTANT: If the requested changes are Instagram-specific (e.g. portrait layout, IG headline size, IG-only elements), return the current HTML COMPLETELY UNCHANGED. Only apply changes that make sense for the Facebook landscape format. Preserve all brand rules below.\n\n${BRAND}\n${loadExamplesBlock()}\nCurrent HTML:\n${state.fb_html}\n\nReturn ONLY the complete updated HTML file — no markdown, no code fences.`;
+      const [updIg, updFb] = await Promise.all([
+        amendAndReviewPost(igPrompt, state.ig_html, 'instagram', igPath),
+        amendAndReviewPost(fbPrompt, state.fb_html, 'facebook', fbPath)
+      ]);
       const [igUrl, fbUrl] = await Promise.all([uploadImage(igPath), uploadImage(fbPath)]);
       await sendPreviewEmail(igUrl, fbUrl, state.version + 1, intent.amendments, igPath, fbPath);
       writeState({ ...state, ig_html: updIg, fb_html: updFb, ig_url: igUrl, fb_url: fbUrl, version: state.version + 1 });
