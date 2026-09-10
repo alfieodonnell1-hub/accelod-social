@@ -46,6 +46,17 @@ async function screenshot(htmlFile, outFile) {
     }
   });
 
+  // Some CDN-hosted logo images have been observed rendering as broken
+  // placeholders inside this CI sandbox specifically (works locally, fails
+  // here) with no thrown error — img.complete is still true for a failed
+  // load, so naturalWidth is the only reliable signal something didn't render.
+  await page.evaluate(() => {
+    const broken = Array.from(document.images).filter(img => img.complete && img.naturalWidth === 0);
+    if (broken.length) {
+      throw new Error('Image(s) failed to load, refusing to screenshot with broken placeholders: ' + broken.map(img => img.src).join(', '));
+    }
+  });
+
   await new Promise(r => setTimeout(r, 800));
 
   const el = await page.$('#post');
