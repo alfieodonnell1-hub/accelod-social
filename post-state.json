@@ -1,5 +1,5 @@
 {
-  "status": "idle",
+  "status": "awaiting_choice",
   "version": 0,
   "past_idea_titles": [
     "Fire Yourself First",
@@ -26,27 +26,30 @@
     "The Electrician Who Replaced His Office Manager With A Workflow",
     "The Tool Stack Lie Nobody Talks About",
     "The Lead Qualification Test That Saves 10 Hours/Week",
-    "Why Your Competitor's Automation Died (And Yours Won't)"
+    "Why Your Competitor's Automation Died (And Yours Won't)",
+    "The Proposal Speed Run",
+    "When Your N8N Breaks (And Why It Will)",
+    "The $4K/Month Inbox Tax"
   ],
-  "last_updated": "2026-09-12T12:16:08.823Z",
+  "last_updated": "2026-09-12T14:25:42.320Z",
   "ideas": [
     {
       "number": 1,
-      "title": "The Tool Stack Lie Nobody Talks About",
-      "concept": "Myth-bust post debunking the idea that more tools = better automation. Visual shows a cluttered dashboard with 15+ disconnected apps vs. a clean, integrated stack (Claude + N8N + GoHighLevel + Google Workspace). Copy explains why tool count doesn't matter—integration and workflow design do.",
-      "hook": "You don't need 47 SaaS subscriptions. You need one thing: a brain that connects them."
+      "title": "The Proposal Speed Run",
+      "concept": "A stat-driven post revealing how long it actually takes to generate, personalize, and send a proposal using Claude + Google Workspace vs. manual creation. Visual: split-screen timer showing 8 minutes automated vs. 2.5 hours manual, with the cost-per-proposal math overlaid.",
+      "hook": "Your competitors are sending quotes in under 10 minutes. You're still in Canva. Here's the gap."
     },
     {
       "number": 2,
-      "title": "The Lead Qualification Test That Saves 10 Hours/Week",
-      "concept": "Tool breakdown/tutorial-style post featuring Claude AI running lead qualification on autopilot via N8N. Before/after visual shows inbox chaos vs. pre-qualified leads landing in GoHighLevel, sorted by fit and budget. Includes a 30-second workflow concept breakdown.",
-      "hook": "Claude just read 40 inbound leads and ranked them by close probability. Your sales team got 10 hours back."
+      "title": "When Your N8N Breaks (And Why It Will)",
+      "concept": "A brutally honest breakdown of the 3 most common N8N workflow failures Alfie sees—missing error handlers, API rate limits, and disconnected triggers—told as a confessional thread. Each failure gets a 2-sentence fix. Visual: rough sketches of broken workflows with red Xs.",
+      "hook": "You built a workflow. Felt amazing. Then Monday morning hit and nothing fired. Sound familiar?"
     },
     {
       "number": 3,
-      "title": "Why Your Competitor's Automation Died (And Yours Won't)",
-      "concept": "Story-driven case study showing a real scenario: business owner implements N8N workflow, gets excited, ignores monitoring, workflow silently breaks after 6 weeks costing them deals. Post reveals the one audit habit that prevents this. Visual: simple timeline of the breakdown + the fix.",
-      "hook": "Most automations don't fail because the tech is bad. They fail because nobody's watching."
+      "title": "The $4K/Month Inbox Tax",
+      "concept": "A case study narrative (disguised names) about a service business losing 4 billable hours weekly to email management. Shows the exact N8N + Claude automation that recaptured it, with GoHighLevel handling the follow-ups. Visual: email chaos photo → clean dashboard screenshot showing filtered/prioritized inbox.",
+      "hook": "This founder paid me to fix their inbox. It ended up being worth more than hiring a part-time admin."
     }
   ],
   "chosen_idea": null,
