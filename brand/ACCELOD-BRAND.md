@@ -13,7 +13,7 @@ Never use a remote <img src="https://..."> for these four tools — CDN logo ima
 - Google Workspace / Google — four-colour "G" mark:
   <svg width="32" height="32" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
 
-- GoHighLevel — three-bar mark:
+- GoHighLevel — three ascending arrow/chevron mark (orange, blue, green):
   <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="#112240"/><path d="M20,72 L20,52 L14,52 L26,28 L38,52 L32,52 L32,72 Z" fill="#F59E0B"/><path d="M50,76 L50,50 L43,50 L55,22 L67,50 L60,50 L60,76 Z" fill="#3B82F6"/><path d="M72,72 L72,52 L66,52 L78,28 L90,52 L84,52 L84,72 Z" fill="#22C55E"/></svg>
 
 - Any other named tool: build a simple inline SVG (letter mark, geometric icon) in a distinct colour — never a remote image, and never an emoji as a logo substitute.
@@ -39,7 +39,8 @@ Place logos inline next to tool names in rows/lists.
 
 ## VISUAL CREATIVITY (required)
 - Use large accent numbers, percentage callouts, or stat blocks as visual anchors
-- Use emoji OR simple inline SVG icons (circles, arrows, checkmarks built from SVG paths) as row icons — not just text
+- Emoji are fine for generic decorative icons (checkmarks, stat callouts, a money-bag next to a saving figure) — but NEVER as a substitute for one of the four named tool logos above. A tool row for Claude/N8N/Google/GoHighLevel always uses its exact specified SVG, never an emoji.
 - Vary the rhythm: mix full-width stat rows with smaller label rows, use colour fills on alternate rows
 - At least one element should be a large typographic number or bold stat that is instantly readable at thumbnail size
 - No wall-of-text content panels — every item needs a visual accent (icon, number, colour stripe, or highlight box)
+- Never shrink text below the minimums above to cram in more items. If a concept calls for listing many things (e.g. "15 disconnected tools"), either show the total as one big stat number and name only 3-5 representative examples at full size, or split across more rows/panels — never reduce the whole list to fit at a smaller-than-spec size.
